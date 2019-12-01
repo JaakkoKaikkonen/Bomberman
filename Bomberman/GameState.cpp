@@ -81,7 +81,7 @@ namespace Game {
 			bombs[i]->update();
 
 			if (bombs[i]->shouldExplode) {
-				bombs[i]->explode(gameField, brickTiles);
+				bombs[i]->explode(gameField, brickTiles, 5);
 			}
 
 			if (bombs[i]->explosionTimer <= 0) {
@@ -131,7 +131,6 @@ namespace Game {
 		for (int i = 0; i < bombs.size(); i++) {
 			bombs[i]->draw();
 		}
-
 
 
 		player.draw();

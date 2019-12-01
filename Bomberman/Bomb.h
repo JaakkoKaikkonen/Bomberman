@@ -10,11 +10,16 @@ namespace Game {
 	class Bomb
 	{
 	public:
+		struct bombAnimationFrame {
+			sf::Vector2f position;
+			sf::Sprite* sprite = nullptr;
+		};
+
 		Bomb(gameDataRef data, sf::Vector2f position);
 
 		void update();
 
-		void explode(int gameField[GAMEFIELD_HEIGHT][GAMEFIELD_WIDTH], std::vector<BrickTile*> brickTiles);
+		void explode(int gameField[GAMEFIELD_HEIGHT][GAMEFIELD_WIDTH], std::vector<BrickTile*> brickTiles, int range = 1);
 
 		void draw();
 
@@ -32,6 +37,8 @@ namespace Game {
 		gameDataRef data;
 
 		sf::Sprite bomb;
+		sf::IntRect bombAnimationFrames[3] = { BOMB_1, BOMB_2, BOMB_3 };
+		Animation bombAnimation;
 
 		sf::Sprite explosionMiddle;
 		sf::IntRect explosionMiddleAnimationFrames[5] = { EXPLOSION_MIDDLE_1, EXPLOSION_MIDDLE_2, EXPLOSION_MIDDLE_3, EXPLOSION_MIDDLE_4, EXPLOSION_MIDDLE_5 };
@@ -48,16 +55,17 @@ namespace Game {
 		sf::Sprite explosionLeft;
 		sf::IntRect explosionLeftAnimationFrames[5] = { EXPLOSION_LEFT_1, EXPLOSION_LEFT_2, EXPLOSION_LEFT_3, EXPLOSION_LEFT_4, EXPLOSION_LEFT_5 };
 		Animation explosionLeftAnimation;
+		sf::Sprite explosionVerticalPart;
+		sf::IntRect explosionVerticalPartAnimationFrames[5] = { EXPLOSION_VERTICAL_PART_1, EXPLOSION_VERTICAL_PART_2, EXPLOSION_VERTICAL_PART_3, EXPLOSION_VERTICAL_PART_4, EXPLOSION_VERTICAL_PART_5 };
+		Animation explosionVerticalPartAnimation;
+		sf::Sprite explosionHorizontalPart;
+		sf::IntRect explosionHorizontalPartAnimationFrames[5] = { EXPLOSION_HORIZONTAL_PART_1, EXPLOSION_HORIZONTAL_PART_2, EXPLOSION_HORIZONTAL_PART_3, EXPLOSION_HORIZONTAL_PART_4, EXPLOSION_HORIZONTAL_PART_5 };
+		Animation explosionHorizontalPartAnimation;
 
-		sf::IntRect bombAnimationFrames[3] = { BOMB_1, BOMB_2, BOMB_3 };
 
-		Animation bombAnimation;
+		std::vector<bombAnimationFrame*> animationFrameList;
 
 		int lifeTime = 120;
-
-		
-
-		
 
 	};
 
