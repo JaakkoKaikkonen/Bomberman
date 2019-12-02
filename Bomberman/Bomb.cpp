@@ -1,4 +1,5 @@
 #include "Bomb.h"
+#include "Collision.hpp"
 
 #include <iostream>
 
@@ -33,12 +34,6 @@ namespace Game {
 		explosionLeft.setScale(3.125f, 3.125f);
 		explosionVerticalPart.setScale(3.125f, 3.125f);
 		explosionHorizontalPart.setScale(3.125f, 3.125f);
-
-		explosionMiddle.setPosition(bomb.getPosition());
-		explosionUp.setPosition(bomb.getPosition().x, bomb.getPosition().y - TILESIZE);
-		explosionDown.setPosition(bomb.getPosition().x, bomb.getPosition().y + TILESIZE);
-		explosionRight.setPosition(bomb.getPosition().x + TILESIZE, bomb.getPosition().y);
-		explosionLeft.setPosition(bomb.getPosition().x - TILESIZE, bomb.getPosition().y);
 	}
 
 	
@@ -64,8 +59,8 @@ namespace Game {
 		bool RightHit = false;
 		bool LeftHit = false;
 
-		animationFrameList.clear();
-		animationFrameList.emplace_back(new bombAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionMiddle });
+		explosionAnimationFrameList.clear();
+		explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionMiddle });
 
 		for (int length = 1; length <= range; length++) {
 
@@ -82,9 +77,9 @@ namespace Game {
 					}
 				} else {
 					if (length == range) {
-						animationFrameList.emplace_back(new bombAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y - length) * TILESIZE) , &explosionUp } );
+						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y - length) * TILESIZE) , &explosionUp } );
 					} else {
-						animationFrameList.emplace_back(new bombAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y - length) * TILESIZE) , &explosionVerticalPart } );
+						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y - length) * TILESIZE) , &explosionVerticalPart } );
 					}
 				}
 			}
@@ -101,9 +96,9 @@ namespace Game {
 					}
 				} else {
 					if (length == range) {
-						animationFrameList.emplace_back(new bombAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y + length) * TILESIZE) , &explosionDown } );
+						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y + length) * TILESIZE) , &explosionDown } );
 					} else {
-						animationFrameList.emplace_back(new bombAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y + length) * TILESIZE) , &explosionVerticalPart } );
+						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y + length) * TILESIZE) , &explosionVerticalPart } );
 					}
 				}
 			}
@@ -120,9 +115,9 @@ namespace Game {
 					}
 				} else {
 					if (length == range) {
-						animationFrameList.emplace_back(new bombAnimationFrame { sf::Vector2f((normalizedBombPos.x + length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionRight } );
+						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f((normalizedBombPos.x + length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionRight } );
 					} else {
-						animationFrameList.emplace_back(new bombAnimationFrame { sf::Vector2f((normalizedBombPos.x + length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionHorizontalPart } );
+						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f((normalizedBombPos.x + length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionHorizontalPart } );
 					}
 				}
 			}
@@ -139,9 +134,9 @@ namespace Game {
 					}
 				} else {
 					if (length == range) {
-						animationFrameList.emplace_back(new bombAnimationFrame { sf::Vector2f((normalizedBombPos.x - length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionLeft } );
+						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f((normalizedBombPos.x - length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionLeft } );
 					} else {
-						animationFrameList.emplace_back(new bombAnimationFrame { sf::Vector2f((normalizedBombPos.x - length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionHorizontalPart } );
+						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f((normalizedBombPos.x - length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionHorizontalPart } );
 					}
 				}
 			}
@@ -155,25 +150,35 @@ namespace Game {
 	}
 
 
+	bool Bomb::hits(Player player) {
+		for (int i = 0; i < explosionAnimationFrameList.size(); i++) {
+			explosionAnimationFrameList[i]->sprite->setPosition(explosionAnimationFrameList[i]->position);
+			if (Collision::checkSpriteCollision(*explosionAnimationFrameList[i]->sprite, player.getSprite())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 	void Bomb::draw() {
 		if (exploded) {
 
-			explosionMiddleAnimation.animate();
-			explosionUpAnimation.animate();
-			explosionDownAnimation.animate();
-			explosionRightAnimation.animate();
-			explosionLeftAnimation.animate();
-			explosionVerticalPartAnimation.animate();
-			explosionHorizontalPartAnimation.animate();
+			explosionMiddleAnimation.animation();
+			explosionUpAnimation.animation();
+			explosionDownAnimation.animation();
+			explosionRightAnimation.animation();
+			explosionLeftAnimation.animation();
+			explosionVerticalPartAnimation.animation();
+			explosionHorizontalPartAnimation.animation();
 
-			for (int i = 0; i < animationFrameList.size(); i++) {
-				animationFrameList[i]->sprite->setPosition(animationFrameList[i]->position);
-				data->window.draw(*animationFrameList[i]->sprite);
+			for (int i = 0; i < explosionAnimationFrameList.size(); i++) {
+				explosionAnimationFrameList[i]->sprite->setPosition(explosionAnimationFrameList[i]->position);
+				data->window.draw(*explosionAnimationFrameList[i]->sprite);
 			}
 
 		} else {
-			bombAnimation.animate();
+			bombAnimation.animation();
 			data->window.draw(bomb);
 		}
 	}

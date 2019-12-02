@@ -23,4 +23,21 @@ namespace Game {
 		}
 	}
 
+	void Animation::animation() {
+		if (start) {
+			start = false;
+			sprite.setTextureRect(animationFrames[animationiterator]);
+			clock.restart();
+		}
+		if (clock.getElapsedTime().asSeconds() > animationTime / size) {
+			if (animationiterator < size - 1) {
+				animationiterator++;
+			} else {
+				animationiterator = 0;
+			}
+			sprite.setTextureRect(animationFrames[animationiterator]);
+			clock.restart();
+		}
+	}
+
 }

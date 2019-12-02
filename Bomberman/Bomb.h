@@ -4,13 +4,14 @@
 #include "DEFINITIONS.hpp"
 #include "Animation.hpp"
 #include "BrickTile.h"
+#include "Player.h"
 
 namespace Game {
 
 	class Bomb
 	{
 	public:
-		struct bombAnimationFrame {
+		struct ExplosionAnimationFrame {
 			sf::Vector2f position;
 			sf::Sprite* sprite = nullptr;
 		};
@@ -20,6 +21,8 @@ namespace Game {
 		void update();
 
 		void explode(int gameField[GAMEFIELD_HEIGHT][GAMEFIELD_WIDTH], std::vector<BrickTile*> brickTiles, int range = 1);
+
+		bool hits(Player player);
 
 		void draw();
 
@@ -32,6 +35,7 @@ namespace Game {
 		bool exploded = false;
 
 		int explosionTimer = 30;
+		
 
 	private:
 		gameDataRef data;
@@ -63,7 +67,7 @@ namespace Game {
 		Animation explosionHorizontalPartAnimation;
 
 
-		std::vector<bombAnimationFrame*> animationFrameList;
+		std::vector<ExplosionAnimationFrame*> explosionAnimationFrameList;
 
 		int lifeTime = 120;
 

@@ -32,7 +32,7 @@ namespace Game {
 
 		bool burning = false;
 
-		float burnTime = 0.6f;
+		float burnTime = 0.75f;
 		sf::Clock burnTimer;
 
 	};

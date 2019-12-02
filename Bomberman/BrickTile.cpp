@@ -23,7 +23,7 @@ namespace Game {
 
 	void BrickTile::draw() {
 		if (burning) {
-			burningTileAnimation.animate();
+			burningTileAnimation.animation();
 		}
 		
 		data->window.draw(brickTile);

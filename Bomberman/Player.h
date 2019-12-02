@@ -19,9 +19,15 @@ namespace Game {
 
 		void draw();
 
+		void kill() { dying = true; }
+
 		sf::Sprite getSprite() { return player; }
 
 		sf::Vector2f getPosition() { return player.getPosition(); }
+
+	public:
+		bool dead = false;
+		bool dying = false;
 
 	private:
 		gameDataRef data;
@@ -40,6 +46,9 @@ namespace Game {
 		sf::IntRect walkingLeftAnimationFrames [4] = { BOMBERMAN_1_WALK_LEFT_1, BOMBERMAN_1_WALK_LEFT_2, BOMBERMAN_1_WALK_LEFT_1, BOMBERMAN_1_WALK_LEFT_3 };
 		Animation walkingLeftAnimation;
 
+		sf::IntRect dyingAnimationFrames [6] = { BOMBERMAN_1_DEAD_1, BOMBERMAN_1_DEAD_2, BOMBERMAN_1_DEAD_3, BOMBERMAN_1_DEAD_4, BOMBERMAN_1_DEAD_5, BOMBERMAN_1_DEAD_6 };
+		Animation dyingAnimation;
+
 		Dir dir = Dir::Down;
 
 		sf::Vector2f previousPosition;
@@ -48,6 +57,8 @@ namespace Game {
 
 		bool moving = false;
 		bool moved = false;
+
+		int dyingTimer = 60;
 
 	};
 

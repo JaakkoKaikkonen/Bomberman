@@ -11,6 +11,8 @@ namespace Game {
 
 		void animate();
 
+		void animation();
+
 		void reset() { animationiterator = 0; }
 
 	private:
@@ -25,6 +27,8 @@ namespace Game {
 		float animationTime;
 
 		unsigned int animationiterator = 0;
+
+		bool start = true;
 	};
 
 }

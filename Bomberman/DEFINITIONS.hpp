@@ -10,6 +10,8 @@
 #define GAMEFIELD_WIDTH (SCREEN_WIDTH / TILESIZE)
 #define GAMEFIELD_HEIGHT (SCREEN_HEIGHT / TILESIZE)
 
+#define FONT_FILEPATH "Resources/Fonts/font.ttf"
+
 #define TOP_ICON_FILEPATH "Resources/Images/bomb_icon.png"
 
 #define BOMB_SPRITES_FILEPATH "Resources/Images/bomberman_tiles.png"
@@ -96,3 +98,12 @@ enum class Dir { Up, Down, Right, Left };
 #define BOMBERMAN_1_WALK_LEFT_1 sf::IntRect(3, 26, 16, 24)
 #define BOMBERMAN_1_WALK_LEFT_2 sf::IntRect(19, 26, 16, 24)
 #define BOMBERMAN_1_WALK_LEFT_3 sf::IntRect(35, 26, 16, 24)
+
+#define DYING_ANIMATION_TIME 1.0f
+
+#define BOMBERMAN_1_DEAD_1 sf::IntRect(30, 57, 15, 24)
+#define BOMBERMAN_1_DEAD_2 sf::IntRect(49, 57, 15, 24)
+#define BOMBERMAN_1_DEAD_3 sf::IntRect(66, 57, 15, 24)
+#define BOMBERMAN_1_DEAD_4 sf::IntRect(83, 57, 15, 24)
+#define BOMBERMAN_1_DEAD_5 sf::IntRect(100, 57, 15, 24)
+#define BOMBERMAN_1_DEAD_6 sf::IntRect(118, 57, 15, 24)

@@ -28,7 +28,7 @@ namespace Game {
 		//Sounds
 
 		//Fonts
-
+		data->assets.loadFont("Font", FONT_FILEPATH);
 
 		//-------------------------------------------------------------------------------------
 

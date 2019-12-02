@@ -38,6 +38,9 @@ namespace Game {
 
 		std::vector<Bomb*> bombs;
 
+		bool gameOver = false;
+
+		sf::Text gameOverText;
 
 		int gameField[GAMEFIELD_HEIGHT][GAMEFIELD_WIDTH] = {
 		{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},

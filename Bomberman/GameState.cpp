@@ -12,8 +12,12 @@ namespace Game {
 		  emptyTile(data->assets.getTexture("Tiles"), EMPTY_TILE),
 		  emptyBelowTile(data->assets.getTexture("Tiles"), EMPTY_BELOW_TILE),
 		  blockTile(data->assets.getTexture("Tiles"), BLOCK_TILE), 
-		  player(data)
-	{
+		  player(data),
+		  gameOverText("GAME OVER", data->assets.getFont("Font"), 32)
+	{	
+		gameOverText.setOrigin(gameOverText.getGlobalBounds().width / 2, gameOverText.getGlobalBounds().height / 2);
+		gameOverText.setPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 0.26f);
+
 		emptyTile.setScale(3.125f, 3.125f);
 		emptyBelowTile.setScale(3.125f, 3.125f);
 		blockTile.setScale(3.125f, 3.125f);
@@ -36,25 +40,30 @@ namespace Game {
 				data->window.close();
 			}
 
-			if (event.type == sf::Event::KeyPressed) {
-				if (event.key.code == sf::Keyboard::Space || event.key.code == sf::Keyboard::RControl) {
-					bombs.emplace_back(new Bomb(data, sf::Vector2f((sf::Vector2i(((player.getPosition() + sf::Vector2f(player.getSprite().getGlobalBounds().width / 2, player.getSprite().getGlobalBounds().height / 2)) / (float)TILESIZE)) * TILESIZE)) + sf::Vector2f(5.0f, 5.0f)));
+			if (!player.dying) {
+				if (event.type == sf::Event::KeyPressed) {
+					if (event.key.code == sf::Keyboard::Space || event.key.code == sf::Keyboard::RControl) {
+						bombs.emplace_back(new Bomb(data, sf::Vector2f((sf::Vector2i(((player.getPosition() + sf::Vector2f(player.getSprite().getGlobalBounds().width / 2, player.getSprite().getGlobalBounds().height / 2 + 5.0f)) / (float)TILESIZE)) * TILESIZE)) + sf::Vector2f(5.0f, 5.0f)));
+					}
 				}
 			}
+
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			data->window.close();
 		}
 		
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-			player.move(Dir::Up);
-		} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-			player.move(Dir::Down);
-		} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-			player.move(Dir::Right);
-		} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-			player.move(Dir::Left);
+		if (!player.dying) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+				player.move(Dir::Up);
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+				player.move(Dir::Down);
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+				player.move(Dir::Right);
+			} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+				player.move(Dir::Left);
+			}
 		}
 
 	}
@@ -63,6 +72,10 @@ namespace Game {
 
 		//Update player
 		player.update();
+
+		if (player.dead) {
+			gameOver = true;
+		}
 
 		//Player Wall Collision
 		for (int i = 0; i < GAMEFIELD_HEIGHT; i++) {
@@ -84,6 +97,10 @@ namespace Game {
 				bombs[i]->explode(gameField, brickTiles, 5);
 			}
 
+			if (bombs[i]->hits(player)) {
+				player.kill();
+			}
+
 			if (bombs[i]->explosionTimer <= 0) {
 				bombs[i] = bombs[bombs.size() - 1];
 				bombs.pop_back();
@@ -98,6 +115,8 @@ namespace Game {
 				brickTiles.pop_back();
 			}
 		}
+
+		std::cout << gameOver << std::endl;
 
 	}
 
@@ -130,6 +149,10 @@ namespace Game {
 
 		for (int i = 0; i < bombs.size(); i++) {
 			bombs[i]->draw();
+		}
+
+		if (gameOver) {
+			data->window.draw(gameOverText);
 		}
 
 
