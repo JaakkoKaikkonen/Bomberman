@@ -151,12 +151,11 @@ namespace Game {
 			bombs[i]->draw();
 		}
 
+		player.draw();
+
 		if (gameOver) {
 			data->window.draw(gameOverText);
 		}
-
-
-		player.draw();
 
 		data->window.display();
 	

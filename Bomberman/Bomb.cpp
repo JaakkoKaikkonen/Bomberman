@@ -153,7 +153,7 @@ namespace Game {
 	bool Bomb::hits(Player player) {
 		for (int i = 0; i < explosionAnimationFrameList.size(); i++) {
 			explosionAnimationFrameList[i]->sprite->setPosition(explosionAnimationFrameList[i]->position);
-			if (Collision::checkSpriteCollision(*explosionAnimationFrameList[i]->sprite, player.getSprite())) {
+			if (Collision::checkSpriteCollision(*explosionAnimationFrameList[i]->sprite, 0.7f, player.getSprite(), 0.7f)) {
 				return true;
 			}
 		}
@@ -178,8 +178,10 @@ namespace Game {
 			}
 
 		} else {
+
 			bombAnimation.animation();
 			data->window.draw(bomb);
+
 		}
 	}
 

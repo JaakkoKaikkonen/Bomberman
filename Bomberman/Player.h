@@ -58,7 +58,8 @@ namespace Game {
 		bool moving = false;
 		bool moved = false;
 
-		int dyingTimer = 60;
+		int dyingTime = 60;
+		int dyingTimer = 0;
 
 	};
 

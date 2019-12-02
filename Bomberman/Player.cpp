@@ -33,15 +33,22 @@ namespace Game {
 	}
 
 	void Player::goToPreviousPosition() {
-		player.setPosition(previousPosition);
+		if (!dying) {
+			player.setPosition(previousPosition);
+		}
 	}
 
 	void Player::update() {
 
 		if (dying) {
-			dyingTimer--;
+			if (dyingTimer < dyingTime / 6) {
+				player.move(0, -8);
+			} else if (dyingTimer < dyingTime / 3) {
+				player.move(0, 8);
+			}
+			dyingTimer++;
 		}
-		if (dyingTimer <= 0) {
+		if (dyingTimer >= dyingTime) {
 			dead = true;
 		}
 
