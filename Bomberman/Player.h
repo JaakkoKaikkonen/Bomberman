@@ -25,6 +25,8 @@ namespace Game {
 
 		sf::Vector2f getPosition() { return player.getPosition(); }
 
+		void setPosition(float x, float y) { player.setPosition(x, y); }
+
 	public:
 		bool dead = false;
 		bool dying = false;

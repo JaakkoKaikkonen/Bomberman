@@ -1,6 +1,8 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
+
 #include "DEFINITIONS.hpp"
 #include "State.hpp"
 #include "Game.hpp"
@@ -57,6 +59,25 @@ namespace Game {
 		{2, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 2},
 		{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
 		};
+
+
+#define SERVER
+
+		Player player2;
+
+		//Networking////////////////////////////////////////////////////////////////////////////
+		sf::UdpSocket socket;
+		unsigned short port = 54001;
+
+#ifdef SERVER
+		sf::IpAddress ip = "37.130.185.210";
+		//sf::IpAddress ip = "192.168.8.103";
+		//sf::IpAddress ip = "127.0.0.1";
+#endif
+#ifdef CLIENT
+		sf::IpAddress ip;
+#endif
+
 
 	};
 

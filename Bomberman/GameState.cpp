@@ -13,7 +13,8 @@ namespace Game {
 		  emptyBelowTile(data->assets.getTexture("Tiles"), EMPTY_BELOW_TILE),
 		  blockTile(data->assets.getTexture("Tiles"), BLOCK_TILE), 
 		  player(data),
-		  gameOverText("GAME OVER", data->assets.getFont("Font"), 32)
+		  gameOverText("GAME OVER", data->assets.getFont("Font"), 32),
+		  player2(data)
 	{	
 		gameOverText.setOrigin(gameOverText.getGlobalBounds().width / 2, gameOverText.getGlobalBounds().height / 2);
 		gameOverText.setPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 0.26f);
@@ -29,6 +30,41 @@ namespace Game {
 				}
 			}
 		}
+
+		//Networking////////////////////////////////////////////////////////////////////////////
+		if (socket.bind(port) != sf::Socket::Done) {
+			// error...
+			std::cout << "udp socket bind error" << std::endl;
+		}
+
+
+#ifdef SERVER
+
+		// UDP socket:
+		char flag[100] = "connect";
+		if (socket.send(flag, 100, ip, port) != sf::Socket::Done)
+		{
+			std::cout << "udp socket send error" << std::endl;
+		}
+		std::cout << "send connect" << std::endl;
+
+#endif
+#ifdef CLIENT
+
+		char flag[100] = "";
+		std::size_t received;
+		if (socket.receive(flag, 100, received, ip, port) != sf::Socket::Done)
+		{
+			std::cout << "udp socket receive error" << std::endl;
+		}
+		std::cout << "Received " << received << " bytes from " << ip << " on port " << port << std::endl;
+		std::cout << flag << std::endl;
+		if (flag == "connect") {
+			std::cout << "connected" << std::endl;
+		}
+
+#endif
+
 	}
 
 
@@ -69,6 +105,38 @@ namespace Game {
 	}
 
 	void GameState::update() {
+
+		//Networking////////////////////////////////////////////////////////////////////////////
+
+		// on sending side
+		float posXOut = player.getPosition().x;
+		float posYOut = player.getPosition().y;
+		sf::Packet packetOut;
+		packetOut << posXOut << posYOut;
+		if (socket.send(packetOut, ip, port) != sf::Socket::Done)
+		{
+			std::cout << "udp socket send error" << std::endl;
+		}
+
+
+		sf::Packet packetIn;
+		if (socket.receive(packetIn, ip, port) != sf::Socket::Done)
+		{
+			std::cout << "udp socket receive error" << std::endl;
+		}
+		std::cout << ip << " on port " << port << std::endl;
+
+		// on receiving side
+		float posXIn;
+		float posYIn;
+
+		packetIn >> posXIn >> posYIn;
+
+		std::cout << posXIn << " " << posYIn << std::endl;
+
+		player2.setPosition(posXIn, posYIn);
+
+
 
 		//Update player
 		player.update();
@@ -116,7 +184,7 @@ namespace Game {
 			}
 		}
 
-		std::cout << gameOver << std::endl;
+		//std::cout << gameOver << std::endl;
 
 	}
 
@@ -152,6 +220,8 @@ namespace Game {
 		}
 
 		player.draw();
+
+		player2.draw();
 
 		if (gameOver) {
 			data->window.draw(gameOverText);
