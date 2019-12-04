@@ -61,23 +61,6 @@ namespace Game {
 		};
 
 
-#define SERVER
-
-		Player player2;
-
-		//Networking////////////////////////////////////////////////////////////////////////////
-		sf::UdpSocket socket;
-		unsigned short port = 54001;
-
-#ifdef SERVER
-		sf::IpAddress ip = "37.130.185.210";
-		//sf::IpAddress ip = "192.168.8.103";
-		//sf::IpAddress ip = "127.0.0.1";
-#endif
-#ifdef CLIENT
-		sf::IpAddress ip;
-#endif
-
 
 	};
 
