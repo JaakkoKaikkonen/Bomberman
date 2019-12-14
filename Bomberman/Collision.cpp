@@ -25,7 +25,7 @@ namespace Collision {
 		return rect1.intersects(rect2);
 	}
 
-	bool bomberManWallCollision(const sf::Sprite& sprite1, const sf::Sprite& sprite2, const float& scale2top, const float& scale2bottom, const float& scale2Right, const float& scale2Left) {
+	bool bomberManCollision(const sf::Sprite& sprite1, const sf::Sprite& sprite2, const float& scale2top, const float& scale2bottom, const float& scale2Right, const float& scale2Left) {
 
 		sf::FloatRect rect1 = sprite1.getGlobalBounds();
 		sf::FloatRect rect2 = sprite2.getGlobalBounds();

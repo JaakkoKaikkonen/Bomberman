@@ -19,12 +19,15 @@ namespace Game {
 
 		data->window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
+		srand((unsigned int)time(NULL));
 
 		//Load Resources ----------------------------------------------------------------------
 
 		//Textures
 		data->assets.loadTexture("Player", PLAYER_SPRITES_FILEPATH);
 		data->assets.loadTexture("Tiles", BOMB_SPRITES_FILEPATH);
+		data->assets.loadTexture("PowerUps", POWER_UP_SPRITES_FILEPATH);
+
 		//Sounds
 
 		//Fonts

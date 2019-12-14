@@ -3,7 +3,7 @@
 
 namespace Game {
 
-	Player::Player(gameDataRef data)
+	Player::Player(gameDataRef data, int playerNumber)
 		: data(data),
 		  player(data->assets.getTexture("Player"), BOMBERMAN_1_WALK_DOWN_2),
 		  walkingDownAnimation(player, walkingDownAnimationFrames, 4, BOMBERMAN_WALK_ANIMATION_TIME),
@@ -14,6 +14,66 @@ namespace Game {
 	{
 		player.setScale(2.5f, 2.5f);
 		player.setPosition(50, 50);
+
+		if (playerNumber == 1) {
+
+			walkingDownAnimationFrames[0] = BOMBERMAN_1_WALK_DOWN_2;
+			walkingDownAnimationFrames[1] = BOMBERMAN_1_WALK_DOWN_1;
+			walkingDownAnimationFrames[2] = BOMBERMAN_1_WALK_DOWN_2;
+			walkingDownAnimationFrames[3] = BOMBERMAN_1_WALK_DOWN_3;
+
+			walkingUpAnimationFrames[0] = BOMBERMAN_1_WALK_UP_2;
+			walkingUpAnimationFrames[1] = BOMBERMAN_1_WALK_UP_1;
+			walkingUpAnimationFrames[2] = BOMBERMAN_1_WALK_UP_2;
+			walkingUpAnimationFrames[3] = BOMBERMAN_1_WALK_UP_3;
+
+			walkingRightAnimationFrames[0] = BOMBERMAN_1_WALK_RIGHT_1;
+			walkingRightAnimationFrames[1] = BOMBERMAN_1_WALK_RIGHT_2;
+			walkingRightAnimationFrames[2] = BOMBERMAN_1_WALK_RIGHT_1;
+			walkingRightAnimationFrames[3] = BOMBERMAN_1_WALK_RIGHT_3;
+
+			walkingLeftAnimationFrames[0] = BOMBERMAN_1_WALK_LEFT_1;
+			walkingLeftAnimationFrames[1] = BOMBERMAN_1_WALK_LEFT_2;
+			walkingLeftAnimationFrames[2] = BOMBERMAN_1_WALK_LEFT_1;
+			walkingLeftAnimationFrames[3] = BOMBERMAN_1_WALK_LEFT_3;
+
+			dyingAnimationFrames[0] = BOMBERMAN_1_DEAD_1;
+			dyingAnimationFrames[1] = BOMBERMAN_1_DEAD_2;
+			dyingAnimationFrames[2] = BOMBERMAN_1_DEAD_3;
+			dyingAnimationFrames[3] = BOMBERMAN_1_DEAD_4;
+			dyingAnimationFrames[4] = BOMBERMAN_1_DEAD_5;
+			dyingAnimationFrames[5] = BOMBERMAN_1_DEAD_6;
+
+		} else if (playerNumber == 2) {
+
+			walkingDownAnimationFrames[0] = BOMBERMAN_2_WALK_DOWN_2;
+			walkingDownAnimationFrames[1] = BOMBERMAN_2_WALK_DOWN_1;
+			walkingDownAnimationFrames[2] = BOMBERMAN_2_WALK_DOWN_2;
+			walkingDownAnimationFrames[3] = BOMBERMAN_2_WALK_DOWN_3;
+
+			walkingUpAnimationFrames[0] = BOMBERMAN_2_WALK_UP_2;
+			walkingUpAnimationFrames[1] = BOMBERMAN_2_WALK_UP_1;
+			walkingUpAnimationFrames[2] = BOMBERMAN_2_WALK_UP_2;
+			walkingUpAnimationFrames[3] = BOMBERMAN_2_WALK_UP_3;
+
+			walkingRightAnimationFrames[0] = BOMBERMAN_2_WALK_RIGHT_1;
+			walkingRightAnimationFrames[1] = BOMBERMAN_2_WALK_RIGHT_2;
+			walkingRightAnimationFrames[2] = BOMBERMAN_2_WALK_RIGHT_1;
+			walkingRightAnimationFrames[3] = BOMBERMAN_2_WALK_RIGHT_3;
+
+			walkingLeftAnimationFrames[0] = BOMBERMAN_2_WALK_LEFT_1;
+			walkingLeftAnimationFrames[1] = BOMBERMAN_2_WALK_LEFT_2;
+			walkingLeftAnimationFrames[2] = BOMBERMAN_2_WALK_LEFT_1;
+			walkingLeftAnimationFrames[3] = BOMBERMAN_2_WALK_LEFT_3;
+
+			dyingAnimationFrames[0] = BOMBERMAN_2_DEAD_1;
+			dyingAnimationFrames[1] = BOMBERMAN_2_DEAD_2;
+			dyingAnimationFrames[2] = BOMBERMAN_2_DEAD_3;
+			dyingAnimationFrames[3] = BOMBERMAN_2_DEAD_4;
+			dyingAnimationFrames[4] = BOMBERMAN_2_DEAD_5;
+			dyingAnimationFrames[5] = BOMBERMAN_2_DEAD_6;
+
+		}
 	}
 
 
@@ -82,15 +142,14 @@ namespace Game {
 					}
 				} else {
 					if (Dir::Up == dir) {
-						player.setTextureRect(BOMBERMAN_1_WALK_UP_2);
+						player.setTextureRect(walkingUpAnimationFrames[0]);
 					} else if (Dir::Down == dir) {
-						player.setTextureRect(BOMBERMAN_1_WALK_DOWN_2);
+						player.setTextureRect(walkingDownAnimationFrames[0]);
 					} else if (Dir::Right == dir) {
-						player.setTextureRect(BOMBERMAN_1_WALK_RIGHT_1);
+						player.setTextureRect(walkingRightAnimationFrames[0]);
 					} else if (Dir::Left == dir) {
-						player.setTextureRect(BOMBERMAN_1_WALK_LEFT_1);
+						player.setTextureRect(walkingLeftAnimationFrames[0]);
 					}
-			
 				}
 			}
 		}

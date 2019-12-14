@@ -1,4 +1,5 @@
 #include "BrickTile.h"
+#include <iostream>
 
 namespace Game {
 
@@ -9,6 +10,19 @@ namespace Game {
 	{
 		brickTile.setPosition(position);
 		brickTile.setScale(3.125f, 3.125f);
+
+		float randNum = (float)rand() / RAND_MAX;
+
+		if (randNum > 0.9f) {
+			powerUp = PowerUpName::Fire;
+		} else if (randNum > 0.8f) {
+			powerUp = PowerUpName::Bomb;
+		} else if (randNum > 0.7f) {
+			powerUp = PowerUpName::Speed;
+		} else if (randNum > 0.6f) {
+			powerUp = PowerUpName::Throw;
+		}
+
 	}
 
 

@@ -5,6 +5,7 @@
 #include "Animation.hpp"
 #include "BrickTile.h"
 #include "Player.h"
+#include "PowerUp.h"
 
 namespace Game {
 
@@ -16,13 +17,13 @@ namespace Game {
 			sf::Sprite* sprite = nullptr;
 		};
 
-		Bomb(gameDataRef data, sf::Vector2f position);
+		Bomb(gameDataRef data, sf::Vector2f position, int blastRadius);
 
 		void update();
 
-		void explode(int gameField[GAMEFIELD_HEIGHT][GAMEFIELD_WIDTH], std::vector<BrickTile*> brickTiles, int range = 1);
+		void explode(int gameField[GAMEFIELD_HEIGHT][GAMEFIELD_WIDTH], std::vector<BrickTile*>& brickTiles, std::vector<PowerUp*>& powerUps);
 
-		bool hits(Player player);
+		bool hits(Player& player);
 
 		void draw();
 
@@ -70,6 +71,8 @@ namespace Game {
 		std::vector<ExplosionAnimationFrame*> explosionAnimationFrameList;
 
 		int lifeTime = 120;
+
+		int blastRadius;
 
 	};
 

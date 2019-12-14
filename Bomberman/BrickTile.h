@@ -20,6 +20,9 @@ namespace Game {
 		void draw();
 
 		sf::Vector2f getPosition() { return brickTile.getPosition(); }
+
+	public:
+		PowerUpName powerUp = PowerUpName::None;
 		
 	private:
 		gameDataRef data;

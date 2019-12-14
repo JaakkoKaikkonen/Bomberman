@@ -9,7 +9,7 @@ namespace Game {
 	class Player
 	{
 	public:
-		Player(gameDataRef data);
+		Player(gameDataRef data, int playerNumber);
 
 		void move(Dir dir);
 
@@ -31,31 +31,33 @@ namespace Game {
 		bool dead = false;
 		bool dying = false;
 
+		int blastRadius = 2;
+
+		float speed = 3.0f;
+
 	private:
 		gameDataRef data;
 
 		sf::Sprite player;
 
-		sf::IntRect walkingDownAnimationFrames [4] = { BOMBERMAN_1_WALK_DOWN_2, BOMBERMAN_1_WALK_DOWN_1, BOMBERMAN_1_WALK_DOWN_2, BOMBERMAN_1_WALK_DOWN_3 };
+		sf::IntRect walkingDownAnimationFrames[4];
 		Animation walkingDownAnimation;
 
-		sf::IntRect walkingUpAnimationFrames [4] = { BOMBERMAN_1_WALK_UP_2, BOMBERMAN_1_WALK_UP_1, BOMBERMAN_1_WALK_UP_2, BOMBERMAN_1_WALK_UP_3 };
+		sf::IntRect walkingUpAnimationFrames[4];
 		Animation walkingUpAnimation;
 
-		sf::IntRect walkingRightAnimationFrames [4] = { BOMBERMAN_1_WALK_RIGHT_1, BOMBERMAN_1_WALK_RIGHT_2, BOMBERMAN_1_WALK_RIGHT_1, BOMBERMAN_1_WALK_RIGHT_3 };
+		sf::IntRect walkingRightAnimationFrames[4];
 		Animation walkingRightAnimation;
 
-		sf::IntRect walkingLeftAnimationFrames [4] = { BOMBERMAN_1_WALK_LEFT_1, BOMBERMAN_1_WALK_LEFT_2, BOMBERMAN_1_WALK_LEFT_1, BOMBERMAN_1_WALK_LEFT_3 };
+		sf::IntRect walkingLeftAnimationFrames[4];
 		Animation walkingLeftAnimation;
 
-		sf::IntRect dyingAnimationFrames [6] = { BOMBERMAN_1_DEAD_1, BOMBERMAN_1_DEAD_2, BOMBERMAN_1_DEAD_3, BOMBERMAN_1_DEAD_4, BOMBERMAN_1_DEAD_5, BOMBERMAN_1_DEAD_6 };
+		sf::IntRect dyingAnimationFrames[6];
 		Animation dyingAnimation;
 
 		Dir dir = Dir::Down;
 
 		sf::Vector2f previousPosition;
-
-		float speed = 3.0f;
 
 		bool moving = false;
 		bool moved = false;

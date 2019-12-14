@@ -12,7 +12,8 @@ namespace Game {
 		  emptyTile(data->assets.getTexture("Tiles"), EMPTY_TILE),
 		  emptyBelowTile(data->assets.getTexture("Tiles"), EMPTY_BELOW_TILE),
 		  blockTile(data->assets.getTexture("Tiles"), BLOCK_TILE), 
-		  player(data),
+		  player1(data, 1),
+		  player2(data, 2),
 		  gameOverText("GAME OVER", data->assets.getFont("Font"), 32)
 	{	
 		gameOverText.setOrigin(gameOverText.getGlobalBounds().width / 2, gameOverText.getGlobalBounds().height / 2);
@@ -30,7 +31,6 @@ namespace Game {
 			}
 		}
 
-
 	}
 
 
@@ -42,40 +42,65 @@ namespace Game {
 				data->window.close();
 			}
 
-			if (!player.dying) {
-				if (event.type == sf::Event::KeyPressed) {
-					if (event.key.code == sf::Keyboard::Space || event.key.code == sf::Keyboard::RControl) {
-						bombs.emplace_back(new Bomb(data, sf::Vector2f((sf::Vector2i(((player.getPosition() + sf::Vector2f(player.getSprite().getGlobalBounds().width / 2, player.getSprite().getGlobalBounds().height / 2 + 5.0f)) / (float)TILESIZE)) * TILESIZE)) + sf::Vector2f(5.0f, 5.0f)));
+			if (event.type == sf::Event::KeyPressed) {
+
+				if (!player1.dying) {
+					if (event.key.code == sf::Keyboard::RControl) {
+						bombs.emplace_back(new Bomb(data, sf::Vector2f((sf::Vector2i(((player1.getPosition() + sf::Vector2f(player1.getSprite().getGlobalBounds().width / 2, player1.getSprite().getGlobalBounds().height / 2 + 5.0f)) / (float)TILESIZE)) * TILESIZE)) + sf::Vector2f(5.0f, 5.0f), player1.blastRadius));
 					}
 				}
+				if (!player2.dying) {
+					if (event.key.code == sf::Keyboard::Space) {
+						bombs.emplace_back(new Bomb(data, sf::Vector2f((sf::Vector2i(((player2.getPosition() + sf::Vector2f(player2.getSprite().getGlobalBounds().width / 2, player2.getSprite().getGlobalBounds().height / 2 + 5.0f)) / (float)TILESIZE)) * TILESIZE)) + sf::Vector2f(5.0f, 5.0f), player2.blastRadius));
+					}
+				}
+
 			}
-
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-			data->window.close();
 		}
 		
-		if (!player.dying) {
+		if (!player1.dying) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-				player.move(Dir::Up);
+				player1.move(Dir::Up);
 			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-				player.move(Dir::Down);
+				player1.move(Dir::Down);
 			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-				player.move(Dir::Right);
+				player1.move(Dir::Right);
 			} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-				player.move(Dir::Left);
+				player1.move(Dir::Left);
 			}
+		}
+
+		if (!player2.dying) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+				player2.move(Dir::Up);
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+				player2.move(Dir::Down);
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+				player2.move(Dir::Right);
+			} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+				player2.move(Dir::Left);
+			}
+		}
+
+		
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+			data->window.close();
 		}
 
 	}
 
 	void GameState::update() {
 
-		//Update player
-		player.update();
+		//Update players
+		player1.update();
 
-		if (player.dead) {
+		if (player1.dead) {
+			gameOver = true;
+		}
+
+		player2.update();
+
+		if (player2.dead) {
 			gameOver = true;
 		}
 
@@ -84,8 +109,11 @@ namespace Game {
 			for (int j = 0; j < GAMEFIELD_WIDTH; j++) {
 				if (gameField[i][j] != 0) {
 					blockTile.setPosition(j * TILESIZE, i * TILESIZE);
-					if (Collision::bomberManWallCollision(blockTile, player.getSprite(), 0.5f, 0.05f, 0.1f, 0.1f)) {
-						player.goToPreviousPosition();
+					if (Collision::bomberManCollision(blockTile, player1.getSprite(), 0.5f, 0.05f, 0.1f, 0.1f)) {
+						player1.goToPreviousPosition();
+					}
+					if (Collision::bomberManCollision(blockTile, player2.getSprite(), 0.5f, 0.05f, 0.1f, 0.1f)) {
+						player2.goToPreviousPosition();
 					}
 				}
 			}
@@ -96,11 +124,15 @@ namespace Game {
 			bombs[i]->update();
 
 			if (bombs[i]->shouldExplode) {
-				bombs[i]->explode(gameField, brickTiles, 5);
+				bombs[i]->explode(gameField, brickTiles, powerUps);
 			}
 
-			if (bombs[i]->hits(player)) {
-				player.kill();
+			if (bombs[i]->hits(player1)) {
+				player1.kill();
+			}
+
+			if (bombs[i]->hits(player2)) {
+				player2.kill();
 			}
 
 			if (bombs[i]->explosionTimer <= 0) {
@@ -110,15 +142,24 @@ namespace Game {
 
 		}
 
+		//PowerUps
+		for (int i = powerUps.size() - 1; i >= 0; i--) {
+			if (powerUps[i]->burned() || powerUps[i]->collides(player1) || powerUps[i]->collides(player2)) {
+				powerUps[i] = powerUps[powerUps.size() - 1];
+				powerUps.pop_back();
+			}
+		}
+
 		//BrickTiles
 		for (int i = brickTiles.size() - 1; i >= 0 ; i--) {
 			if (brickTiles[i]->burned()) {
+				if (brickTiles[i]->powerUp != PowerUpName::None) {
+					powerUps.emplace_back(new PowerUp(data, brickTiles[i]->powerUp, brickTiles[i]->getPosition()));
+				}
 				brickTiles[i] = brickTiles[brickTiles.size() - 1];
 				brickTiles.pop_back();
 			}
 		}
-
-		//std::cout << gameOver << std::endl;
 
 	}
 
@@ -145,6 +186,10 @@ namespace Game {
 			}
 		}
 
+		for (int i = 0; i < powerUps.size(); i++) {
+			powerUps[i]->draw();
+		}
+
 		for (int i = 0; i < brickTiles.size(); i++) {
 			brickTiles[i]->draw();
 		}
@@ -153,8 +198,14 @@ namespace Game {
 			bombs[i]->draw();
 		}
 
-		player.draw();
 
+		if (player2.dead) {
+			player2.draw();
+			player1.draw();
+		} else {
+			player1.draw();
+			player2.draw();
+		}
 
 		if (gameOver) {
 			data->window.draw(gameOverText);

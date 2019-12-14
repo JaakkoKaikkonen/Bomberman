@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "Bomb.h"
 #include "BrickTile.h"
+#include "PowerUp.h"
 #include <vector>
 
 namespace Game {
@@ -36,7 +37,11 @@ namespace Game {
 
 		std::vector<BrickTile*> brickTiles;
 
-		Player player;
+		std::vector<PowerUp*> powerUps;
+
+		Player player1;
+
+		Player player2;
 
 		std::vector<Bomb*> bombs;
 
