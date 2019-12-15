@@ -5,8 +5,9 @@
 
 namespace Game {
 
-	Bomb::Bomb(gameDataRef data, Player& player, sf::Vector2f position, int blastRadius) 
-		: data(data),
+	Bomb::Bomb(gameDataRef data, Player& player, sf::Vector2i normalizedPos, int blastRadius) 
+		: normalizedPos(normalizedPos),
+		  data(data),
 		  player(player),
 		  bomb(data->assets.getTexture("Tiles"), BOMB_2),
 		  bombAnimation(bomb, bombAnimationFrames, 3, 1.0f),
@@ -27,7 +28,7 @@ namespace Game {
 		  blastRadius(blastRadius)
 	{	
 		bomb.setScale(2.5f, 2.5f);
-		bomb.setPosition(position);
+		bomb.setPosition(sf::Vector2f(normalizedPos + sf::Vector2i(5, 5)));
 
 		explosionMiddle.setScale(3.125f, 3.125f);
 		explosionUp.setScale(3.125f, 3.125f);

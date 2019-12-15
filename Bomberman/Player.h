@@ -9,7 +9,7 @@ namespace Game {
 	class Player
 	{
 	public:
-		Player(gameDataRef data, int playerNumber);
+		Player(gameDataRef data, sf::Vector2f position, int playerNumber);
 
 		void move(Dir dir);
 
@@ -31,7 +31,7 @@ namespace Game {
 		bool dead = false;
 		bool dying = false;
 
-		int blastRadius = 2;
+		int blastRadius = 1;
 
 		float speed = 3.0f;
 

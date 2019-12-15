@@ -33,7 +33,7 @@ namespace Game {
 				} else if(PowerUpName::Bomb == powerUp) {
 					player.bombLimit += 1;
 				} else if(PowerUpName::Speed == powerUp) {
-					player.speed += 1.0f;
+					player.speed += 0.5f;
 				} else if(PowerUpName::Throw == powerUp) {
 				
 				} 

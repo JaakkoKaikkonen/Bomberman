@@ -12,8 +12,8 @@ namespace Game {
 		  emptyTile(data->assets.getTexture("Tiles"), EMPTY_TILE),
 		  emptyBelowTile(data->assets.getTexture("Tiles"), EMPTY_BELOW_TILE),
 		  blockTile(data->assets.getTexture("Tiles"), BLOCK_TILE), 
-		  player1(data, 1),
-		  player2(data, 2),
+		  player1(data, sf::Vector2f(50.0f + 5.0f, 50.0f), 1),
+		  player2(data, sf::Vector2f(SCREEN_WIDTH - TILESIZE * 2 + 5.0f, 50.0f), 2),
 		  gameOverText("GAME OVER", data->assets.getFont("Font"), 32)
 	{	
 		gameOverText.setOrigin(gameOverText.getGlobalBounds().width / 2, gameOverText.getGlobalBounds().height / 2);
@@ -45,15 +45,35 @@ namespace Game {
 			if (event.type == sf::Event::KeyPressed) {
 
 				if (!player1.dying && player1.bombCount < player1.bombLimit) {
-					if (event.key.code == sf::Keyboard::RControl) {
-						bombs.emplace_back(new Bomb(data, player1, sf::Vector2f((sf::Vector2i(((player1.getPosition() + sf::Vector2f(player1.getSprite().getGlobalBounds().width / 2, player1.getSprite().getGlobalBounds().height / 2 + 5.0f)) / (float)TILESIZE)) * TILESIZE)) + sf::Vector2f(5.0f, 5.0f), player1.blastRadius));
-						player1.bombCount++;
+					if (event.key.code == sf::Keyboard::Space) {
+						sf::Vector2i normalizeBombPos = sf::Vector2i((sf::Vector2i(((player1.getPosition() + sf::Vector2f(player1.getSprite().getGlobalBounds().width / 2, player1.getSprite().getGlobalBounds().height / 2 + 5.0f)) / (float)TILESIZE)) * TILESIZE));
+						bool overlap = false;
+						for (int i = 0; i < bombs.size(); i++) {
+							if (bombs[i]->normalizedPos == normalizeBombPos) {
+								overlap = true;
+								break;
+							}
+						}
+						if (!overlap) {
+							bombs.emplace_back(new Bomb(data, player1, normalizeBombPos, player1.blastRadius));
+							player1.bombCount++;
+						}
 					}
 				}
 				if (!player2.dying && player2.bombCount < player2.bombLimit) {
-					if (event.key.code == sf::Keyboard::Space) {
-						bombs.emplace_back(new Bomb(data, player2, sf::Vector2f((sf::Vector2i(((player2.getPosition() + sf::Vector2f(player2.getSprite().getGlobalBounds().width / 2, player2.getSprite().getGlobalBounds().height / 2 + 5.0f)) / (float)TILESIZE)) * TILESIZE)) + sf::Vector2f(5.0f, 5.0f), player2.blastRadius));
-						player2.bombCount++;
+					if (event.key.code == sf::Keyboard::RControl) {
+						sf::Vector2i normalizeBombPos = sf::Vector2i((sf::Vector2i(((player2.getPosition() + sf::Vector2f(player2.getSprite().getGlobalBounds().width / 2, player2.getSprite().getGlobalBounds().height / 2 + 5.0f)) / (float)TILESIZE)) * TILESIZE));
+						bool overlap = false;
+						for (int i = 0; i < bombs.size(); i++) {
+							if (bombs[i]->normalizedPos == normalizeBombPos) {
+								overlap = true;
+								break;
+							}
+						}
+						if (!overlap) {
+							bombs.emplace_back(new Bomb(data, player2, normalizeBombPos, player2.blastRadius));
+							player2.bombCount++;
+						}
 					}
 				}
 
@@ -61,25 +81,25 @@ namespace Game {
 		}
 		
 		if (!player1.dying) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 				player1.move(Dir::Up);
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 				player1.move(Dir::Down);
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 				player1.move(Dir::Right);
-			} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+			} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
 				player1.move(Dir::Left);
 			}
 		}
 
 		if (!player2.dying) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 				player2.move(Dir::Up);
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)  ) {
 				player2.move(Dir::Down);
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)  ) {
 				player2.move(Dir::Right);
-			} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+			} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
 				player2.move(Dir::Left);
 			}
 		}

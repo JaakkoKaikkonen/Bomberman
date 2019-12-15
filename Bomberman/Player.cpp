@@ -3,7 +3,7 @@
 
 namespace Game {
 
-	Player::Player(gameDataRef data, int playerNumber)
+	Player::Player(gameDataRef data, sf::Vector2f position, int playerNumber)
 		: data(data),
 		  player(data->assets.getTexture("Player"), BOMBERMAN_1_WALK_DOWN_2),
 		  walkingDownAnimation(player, walkingDownAnimationFrames, 4, BOMBERMAN_WALK_ANIMATION_TIME),
@@ -13,7 +13,7 @@ namespace Game {
 		  dyingAnimation(player, dyingAnimationFrames, 6, DYING_ANIMATION_TIME)
 	{
 		player.setScale(2.5f, 2.5f);
-		player.setPosition(50, 50);
+		player.setPosition(position);
 
 		if (playerNumber == 1) {
 

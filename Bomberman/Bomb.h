@@ -17,7 +17,7 @@ namespace Game {
 			sf::Sprite* sprite = nullptr;
 		};
 
-		Bomb(gameDataRef data, Player& player, sf::Vector2f position, int blastRadius);
+		Bomb(gameDataRef data, Player& player, sf::Vector2i position, int blastRadius);
 
 		void update();
 
@@ -36,6 +36,8 @@ namespace Game {
 		bool exploded = false;
 
 		int explosionTimer = 30;
+
+		sf::Vector2i normalizedPos;
 		
 
 	private:
