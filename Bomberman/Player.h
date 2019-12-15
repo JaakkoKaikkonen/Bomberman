@@ -35,6 +35,9 @@ namespace Game {
 
 		float speed = 3.0f;
 
+		int bombLimit = 1;
+		int bombCount = 0;
+
 	private:
 		gameDataRef data;
 

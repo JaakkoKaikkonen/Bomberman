@@ -17,7 +17,7 @@ namespace Game {
 			sf::Sprite* sprite = nullptr;
 		};
 
-		Bomb(gameDataRef data, sf::Vector2f position, int blastRadius);
+		Bomb(gameDataRef data, Player& player, sf::Vector2f position, int blastRadius);
 
 		void update();
 
@@ -40,6 +40,8 @@ namespace Game {
 
 	private:
 		gameDataRef data;
+
+		Player& player;
 
 		sf::Sprite bomb;
 		sf::IntRect bombAnimationFrames[3] = { BOMB_1, BOMB_2, BOMB_3 };

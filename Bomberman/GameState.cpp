@@ -44,14 +44,16 @@ namespace Game {
 
 			if (event.type == sf::Event::KeyPressed) {
 
-				if (!player1.dying) {
+				if (!player1.dying && player1.bombCount < player1.bombLimit) {
 					if (event.key.code == sf::Keyboard::RControl) {
-						bombs.emplace_back(new Bomb(data, sf::Vector2f((sf::Vector2i(((player1.getPosition() + sf::Vector2f(player1.getSprite().getGlobalBounds().width / 2, player1.getSprite().getGlobalBounds().height / 2 + 5.0f)) / (float)TILESIZE)) * TILESIZE)) + sf::Vector2f(5.0f, 5.0f), player1.blastRadius));
+						bombs.emplace_back(new Bomb(data, player1, sf::Vector2f((sf::Vector2i(((player1.getPosition() + sf::Vector2f(player1.getSprite().getGlobalBounds().width / 2, player1.getSprite().getGlobalBounds().height / 2 + 5.0f)) / (float)TILESIZE)) * TILESIZE)) + sf::Vector2f(5.0f, 5.0f), player1.blastRadius));
+						player1.bombCount++;
 					}
 				}
-				if (!player2.dying) {
+				if (!player2.dying && player2.bombCount < player2.bombLimit) {
 					if (event.key.code == sf::Keyboard::Space) {
-						bombs.emplace_back(new Bomb(data, sf::Vector2f((sf::Vector2i(((player2.getPosition() + sf::Vector2f(player2.getSprite().getGlobalBounds().width / 2, player2.getSprite().getGlobalBounds().height / 2 + 5.0f)) / (float)TILESIZE)) * TILESIZE)) + sf::Vector2f(5.0f, 5.0f), player2.blastRadius));
+						bombs.emplace_back(new Bomb(data, player2, sf::Vector2f((sf::Vector2i(((player2.getPosition() + sf::Vector2f(player2.getSprite().getGlobalBounds().width / 2, player2.getSprite().getGlobalBounds().height / 2 + 5.0f)) / (float)TILESIZE)) * TILESIZE)) + sf::Vector2f(5.0f, 5.0f), player2.blastRadius));
+						player2.bombCount++;
 					}
 				}
 

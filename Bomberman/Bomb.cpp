@@ -5,8 +5,9 @@
 
 namespace Game {
 
-	Bomb::Bomb(gameDataRef data, sf::Vector2f position, int blastRadius) 
+	Bomb::Bomb(gameDataRef data, Player& player, sf::Vector2f position, int blastRadius) 
 		: data(data),
+		  player(player),
 		  bomb(data->assets.getTexture("Tiles"), BOMB_2),
 		  bombAnimation(bomb, bombAnimationFrames, 3, 1.0f),
 		  explosionMiddle(data->assets.getTexture("Tiles"), EXPLOSION_MIDDLE_1),
@@ -52,6 +53,8 @@ namespace Game {
 	void Bomb::explode(int gameField[GAMEFIELD_HEIGHT][GAMEFIELD_WIDTH], std::vector<BrickTile*>& brickTiles, std::vector<PowerUp*>& powerUps) {
 		
 		std::cout << "Explode" << std::endl;
+
+		player.bombCount--;
 
 		sf::Vector2i normalizedBombPos = sf::Vector2i(bomb.getPosition() / (float)TILESIZE);
 

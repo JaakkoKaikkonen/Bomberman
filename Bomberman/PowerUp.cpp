@@ -31,7 +31,7 @@ namespace Game {
 				if (PowerUpName::Fire == powerUp){
 					player.blastRadius += 1;
 				} else if(PowerUpName::Bomb == powerUp) {
-				
+					player.bombLimit += 1;
 				} else if(PowerUpName::Speed == powerUp) {
 					player.speed += 1.0f;
 				} else if(PowerUpName::Throw == powerUp) {
