@@ -146,7 +146,7 @@ namespace Game {
 			bombs[i]->update();
 
 			if (bombs[i]->shouldExplode) {
-				bombs[i]->explode(gameField, brickTiles, powerUps);
+				bombs[i]->explode(gameField, brickTiles, powerUps, bombs);
 			}
 
 			if (bombs[i]->hits(player1)) {

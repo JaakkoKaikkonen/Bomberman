@@ -21,7 +21,7 @@ namespace Game {
 
 		void update();
 
-		void explode(int gameField[GAMEFIELD_HEIGHT][GAMEFIELD_WIDTH], std::vector<BrickTile*>& brickTiles, std::vector<PowerUp*>& powerUps);
+		void explode(int gameField[GAMEFIELD_HEIGHT][GAMEFIELD_WIDTH], std::vector<BrickTile*>& brickTiles, std::vector<PowerUp*>& powerUps, std::vector<Bomb*>& bombs);
 
 		bool hits(Player& player);
 
@@ -38,6 +38,8 @@ namespace Game {
 		int explosionTimer = 30;
 
 		sf::Vector2i normalizedPos;
+
+		int lifeTime = 120;
 		
 
 	private:
@@ -74,9 +76,11 @@ namespace Game {
 
 		std::vector<ExplosionAnimationFrame*> explosionAnimationFrameList;
 
-		int lifeTime = 120;
-
 		int blastRadius;
+
+		int explosionDelayAfterHitByExplosion = 5;
+
+		bool hitByExplosion = false;
 
 	};
 
