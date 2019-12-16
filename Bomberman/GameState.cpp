@@ -23,13 +23,7 @@ namespace Game {
 		emptyBelowTile.setScale(3.125f, 3.125f);
 		blockTile.setScale(3.125f, 3.125f);
 
-		for (int i = 0; i < GAMEFIELD_HEIGHT; i++) {
-			for (int j = 0; j < GAMEFIELD_WIDTH; j++) {
-				if (gameField[i][j] == 1) {
-					brickTiles.emplace_back(new BrickTile(data, sf::Vector2f(j * TILESIZE, i * TILESIZE)));
-				}
-			}
-		}
+		this->generateMap();
 
 	}
 
@@ -104,6 +98,9 @@ namespace Game {
 			}
 		}
 
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+			this->reset();
+		}
 		
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			data->window.close();
@@ -237,5 +234,65 @@ namespace Game {
 	
 	}
 
+
+	void GameState::generateMap() {
+
+		for (int i = 0; i < GAMEFIELD_HEIGHT; i++) {
+			for (int j = 0; j < GAMEFIELD_WIDTH; j++) {
+				if (i == 0 || i == GAMEFIELD_HEIGHT - 1 || j == 0 || j == GAMEFIELD_WIDTH - 1 || (i % 2 == 0 && j % 2 == 0)) {
+					gameField[i][j] = 2;
+				} else {
+					gameField[i][j] = 0;
+				}
+			}
+		}
+
+		for (int i = 0; i < GAMEFIELD_HEIGHT; i++) {
+			for (int j = 0; j < GAMEFIELD_WIDTH; j++) {
+				if (gameField[i][j] != 2) {
+					float change = (float)rand() / RAND_MAX;
+					if (change >= 0.16f) {
+						gameField[i][j] = 1;
+					}
+				}
+			}
+		}
+
+		gameField[1][1] = 0;
+		gameField[2][1] = 0;
+		gameField[1][2] = 0;
+		gameField[GAMEFIELD_HEIGHT - 2][GAMEFIELD_WIDTH - 2] = 0;
+		gameField[GAMEFIELD_HEIGHT - 3][GAMEFIELD_WIDTH - 2] = 0;
+		gameField[GAMEFIELD_HEIGHT - 2][GAMEFIELD_WIDTH - 3] = 0;
+		gameField[GAMEFIELD_HEIGHT - 2][1] = 0;
+		gameField[GAMEFIELD_HEIGHT - 2][2] = 0;
+		gameField[GAMEFIELD_HEIGHT - 3][1] = 0;
+		gameField[1][GAMEFIELD_WIDTH - 2] = 0;
+		gameField[2][GAMEFIELD_WIDTH - 2] = 0;
+		gameField[1][GAMEFIELD_WIDTH - 3] = 0;
+
+		brickTiles.clear();
+		for (int i = 0; i < GAMEFIELD_HEIGHT; i++) {
+			for (int j = 0; j < GAMEFIELD_WIDTH; j++) {
+				if (gameField[i][j] == 1) {
+					brickTiles.emplace_back(new BrickTile(data, sf::Vector2f(j * TILESIZE, i * TILESIZE)));
+				}
+			}
+		}
+	}
+
+
+	void GameState::reset() {
+		player1.reset();
+		player2.reset();
+		player1.setPosition(50.0f + 5.0f, 50.0f);
+		player2.setPosition(SCREEN_WIDTH - TILESIZE * 2 + 5.0f, 50.0f);
+		bombs.clear();
+		powerUps.clear();
+		
+		this->generateMap();
+
+		gameOver = false;
+	}
 
 }

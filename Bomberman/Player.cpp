@@ -157,4 +157,19 @@ namespace Game {
 		data->window.draw(player);
 	}
 
+
+	void Player::reset() {
+		dead = false;
+		dying = false;
+		blastRadius = 1;
+		speed = 3.0f;
+		bombLimit = 1;
+		bombCount = 0;
+		dir = Dir::Down;
+		previousPosition = sf::Vector2f(0.0f, 0.0f);
+		moving = false;
+		moved = false;
+		dyingTimer = 0;
+	}
+
 }

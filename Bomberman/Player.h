@@ -27,6 +27,8 @@ namespace Game {
 
 		void setPosition(float x, float y) { player.setPosition(x, y); }
 
+		void reset();
+
 	public:
 		bool dead = false;
 		bool dying = false;
