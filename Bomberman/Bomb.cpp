@@ -26,12 +26,11 @@ namespace Game {
 		  explosionVerticalPartAnimation(explosionVerticalPart, explosionVerticalPartAnimationFrames, 5, 0.5f),
 		  explosionHorizontalPart(data->assets.getTexture("Tiles"), EXPLOSION_HORIZONTAL_PART_1),
 		  explosionHorizontalPartAnimation(explosionHorizontalPart, explosionHorizontalPartAnimationFrames, 5, 0.5f),
-		  blastRadius(blastRadius)
+		  blastRadius(blastRadius),
+		  startPosition(sf::Vector2f((normalizedPos * TILESIZE) + sf::Vector2i(5, 5)))
 	{	
 		bomb.setScale(2.5f, 2.5f);
 		bomb.setPosition(sf::Vector2f((normalizedPos * TILESIZE) + sf::Vector2i(5, 5)));
-
-		std::cout << normalizedPos.x << "\t" << normalizedPos.y << std::endl;
 
 		explosionMiddle.setScale(3.125f, 3.125f);
 		explosionUp.setScale(3.125f, 3.125f);
@@ -53,15 +52,16 @@ namespace Game {
 			explosionTimer--;
 		}
 
+		normalizedPos = sf::Vector2i(bomb.getPosition() / (float)TILESIZE);
+
 		if (moving) {
 			moveAnimationPercentage += moveAnimationPercentageStep;
 			if (moveAnimationPercentage >= 1.0f) {
 				bomb.setPosition(sf::Vector2f((newPosition * TILESIZE) + sf::Vector2i(5, 5)));
-				normalizedPos = sf::Vector2i(bomb.getPosition() / (float)TILESIZE);
 				moving = false;
 				moveAnimationPercentage = 0.0f;
 			} else {
-				bomb.setPosition(utility::lerp(moveAnimationPercentage, sf::Vector2f(normalizedPos * TILESIZE) + sf::Vector2f(5, 5), sf::Vector2f((newPosition * TILESIZE) + sf::Vector2i(5, 5))));
+				bomb.setPosition(utility::lerp(moveAnimationPercentage, startPosition, sf::Vector2f((newPosition * TILESIZE) + sf::Vector2i(5, 5))));
 			}
 		}
 

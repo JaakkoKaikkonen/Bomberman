@@ -45,7 +45,8 @@ namespace Game {
 		int bombLimit = 1;
 		int bombCount = 0;
 
-		bool punchPowerUp = true;
+		bool punchPowerUp = false;
+		bool kickPowerUp = false;
 
 		Dir dir = Dir::Down;
 
@@ -79,8 +80,8 @@ namespace Game {
 		int dyingTime = 60;
 		int dyingTimer = 0;
 
-		int punchTimer = 25;
-		int punchTime = 25;
+		int punchTimer = 20;
+		int punchTime = 20;
 
 	};
 

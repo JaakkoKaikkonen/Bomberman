@@ -30,6 +30,7 @@ namespace Game {
 	
 	private:
 		void punchBomb(Player player);
+		void kickBomb(Player player);
 
 		void generateMap();
 		void reset();

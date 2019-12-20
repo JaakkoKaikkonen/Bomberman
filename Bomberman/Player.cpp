@@ -193,6 +193,8 @@ namespace Game {
 		speed = 3.0f;
 		bombLimit = 1;
 		bombCount = 0;
+		punchPowerUp = false;
+		kickPowerUp = false;
 		dir = Dir::Down;
 		previousPosition = sf::Vector2f(0.0f, 0.0f);
 		moving = false;

@@ -44,6 +44,8 @@ namespace Game {
 		sf::Vector2i normalizedPos;
 
 		int lifeTime = 120;
+
+		bool moving = false;
 		
 
 	private:
@@ -92,7 +94,7 @@ namespace Game {
 		float moveAnimationPercentage = 0.0f;
 		float moveAnimationPercentageStep;
 
-		bool moving = false;
+		sf::Vector2f startPosition;
 
 		sf::Vector2i newPosition;
 

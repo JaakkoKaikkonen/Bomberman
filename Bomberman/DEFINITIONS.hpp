@@ -19,7 +19,7 @@
 
 enum class Dir { Up, Down, Right, Left };
 
-enum class PowerUpName { None, Fire, Bomb, Speed, Punch };
+enum class PowerUpName { None, Fire, Bomb, Speed, Punch, Kick };
 
 
 #define BLOCK_TILE sf::IntRect(18, 0, 16, 16)
@@ -147,7 +147,8 @@ enum class PowerUpName { None, Fire, Bomb, Speed, Punch };
 #define POWER_UP_FIRE sf::IntRect(3, 3, 16, 16)
 #define POWER_UP_BOMB sf::IntRect(37, 3, 16, 16)
 #define POWER_UP_SPEED sf::IntRect(54, 3, 16, 16)
-#define POWER_UP_THROW sf::IntRect(37, 20, 16, 16)
+#define POWER_UP_PUNCH sf::IntRect(37, 20, 16, 16)
+#define POWER_UP_KICK sf::IntRect(3, 20, 16, 16)
 
 #define BURN_ANIMATION_TIME 1.0f
 

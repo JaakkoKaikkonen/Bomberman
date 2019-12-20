@@ -16,7 +16,9 @@ namespace Game {
 		} else if (PowerUpName::Speed == powerUp) {
 			powerUpSprite.setTextureRect(POWER_UP_SPEED);
 		} else if (PowerUpName::Punch == powerUp) {
-			powerUpSprite.setTextureRect(POWER_UP_THROW);
+			powerUpSprite.setTextureRect(POWER_UP_PUNCH);
+		} else if (PowerUpName::Kick == powerUp) {
+			powerUpSprite.setTextureRect(POWER_UP_KICK);
 		}
 
 		powerUpSprite.setPosition(position);
@@ -26,16 +28,18 @@ namespace Game {
 
 	bool PowerUp::collides(Player& player) {
 		if (!burning) {
-			if (Collision::bomberManCollision(powerUpSprite, player.getSprite(), 0.5f, 0.05f, 0.1f, 0.1f)) {
+			if (Collision::bomberManCollision(powerUpSprite, player.getSprite(), 0.5f, 0.05f, 0.2f, 0.2f)) {
 			
 				if (PowerUpName::Fire == powerUp){
 					player.blastRadius += 1;
-				} else if(PowerUpName::Bomb == powerUp) {
+				} else if (PowerUpName::Bomb == powerUp) {
 					player.bombLimit += 1;
-				} else if(PowerUpName::Speed == powerUp) {
+				} else if (PowerUpName::Speed == powerUp) {
 					player.speed += 0.5f;
-				} else if(PowerUpName::Punch == powerUp) {
+				} else if (PowerUpName::Punch == powerUp) {
 					player.punchPowerUp = true;
+				} else if (PowerUpName::Kick == powerUp) {
+					player.kickPowerUp = true;
 				} 
 
 				return true;

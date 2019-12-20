@@ -78,7 +78,7 @@ namespace Game {
 					}
 				}
 
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Joystick::isButtonPressed(0, 2)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Joystick::isButtonPressed(0, 2)) {
 					if (player1.punchPowerUp) {
 						player1.punch();
 						this->punchBomb(player1);
@@ -89,6 +89,18 @@ namespace Game {
 					if (player2.punchPowerUp) {
 						player2.punch();
 						this->punchBomb(player2);
+					}
+				}
+
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Joystick::isButtonPressed(0, 1)) {
+					if (player1.kickPowerUp) {
+						this->kickBomb(player1);
+					}
+				}
+
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) || sf::Joystick::isButtonPressed(1, 1)) {
+					if (player2.kickPowerUp) {
+						this->kickBomb(player2);
 					}
 				}
 
@@ -161,10 +173,10 @@ namespace Game {
 			for (int j = 0; j < GAMEFIELD_HEIGHT; j++) {
 				if (gameField[i][j] != 0) {
 					blockTile.setPosition(i * TILESIZE, j * TILESIZE);
-					if (Collision::bomberManCollision(blockTile, player1.getSprite(), 0.5f, 0.05f, 0.1f, 0.1f)) {
+					if (Collision::bomberManCollision(blockTile, player1.getSprite(), 0.5f, 0.05f, 0.2f, 0.2f)) {
 						player1.goToPreviousPosition();
 					}
-					if (Collision::bomberManCollision(blockTile, player2.getSprite(), 0.5f, 0.05f, 0.1f, 0.1f)) {
+					if (Collision::bomberManCollision(blockTile, player2.getSprite(), 0.5f, 0.05f, 0.2f, 0.2f)) {
 						player2.goToPreviousPosition();
 					}
 				}
@@ -272,8 +284,6 @@ namespace Game {
 		
 		sf::Vector2i normalizedPlayerPos = sf::Vector2i((player.getPosition().x + player.getSprite().getGlobalBounds().width / 2) / (float)TILESIZE, (player.getPosition().y + player.getSprite().getGlobalBounds().height / 2) / (float)TILESIZE);
 
-		std::cout << "PlayerNormPos: " << normalizedPlayerPos.x << "\t" << normalizedPlayerPos.y << std::endl; 
-
 		if (Dir::Up == player.dir) {
 
 			sf::Vector2i inFrontOfPlayerPos = sf::Vector2i(normalizedPlayerPos.x, normalizedPlayerPos.y - 1);
@@ -334,6 +344,82 @@ namespace Game {
 					int step = 1;
 					if (gameField[bombs[i]->normalizedPos.x  - step][bombs[i]->normalizedPos.y] != 0) {
 						while (gameField[bombs[i]->normalizedPos.x - step][bombs[i]->normalizedPos.y] != 0) {
+							step++;
+						}
+						bombs[i]->move(sf::Vector2i(bombs[i]->normalizedPos.x - step, bombs[i]->normalizedPos.y));
+					}
+					break;
+				}
+			}
+
+		}
+
+	}
+
+	void GameState::kickBomb(Player player) {
+		
+		sf::Vector2i normalizedPlayerPos = sf::Vector2i((player.getPosition().x + player.getSprite().getGlobalBounds().width / 2) / (float)TILESIZE, (player.getPosition().y + player.getSprite().getGlobalBounds().height / 2) / (float)TILESIZE);
+
+		if (Dir::Up == player.dir) {
+
+			sf::Vector2i inFrontOfPlayerPos = sf::Vector2i(normalizedPlayerPos.x, normalizedPlayerPos.y - 1);
+			
+			for (int i = 0; i < bombs.size(); i++) {
+				if (normalizedPlayerPos == bombs[i]->normalizedPos || inFrontOfPlayerPos == bombs[i]->normalizedPos) {
+					int step = 1;
+					if (gameField[bombs[i]->normalizedPos.x][bombs[i]->normalizedPos.y - step] == 0) {
+						while (gameField[bombs[i]->normalizedPos.x][bombs[i]->normalizedPos.y - (step + 1)] == 0) {
+							step++;
+						}
+						bombs[i]->move(sf::Vector2i(bombs[i]->normalizedPos.x, bombs[i]->normalizedPos.y - step));
+					} 
+					break;
+				}
+			}
+
+		} else if (Dir::Down == player.dir) {
+
+			sf::Vector2i inFrontOfPlayerPos = sf::Vector2i(normalizedPlayerPos.x, normalizedPlayerPos.y + 1);
+			
+			for (int i = 0; i < bombs.size(); i++) {
+				if (normalizedPlayerPos == bombs[i]->normalizedPos || inFrontOfPlayerPos == bombs[i]->normalizedPos) {
+					int step = 1;
+					if (gameField[bombs[i]->normalizedPos.x][bombs[i]->normalizedPos.y + step] == 0) {
+						while (gameField[bombs[i]->normalizedPos.x][bombs[i]->normalizedPos.y + (step + 1)] == 0) {
+							step++;
+						}
+						bombs[i]->move(sf::Vector2i(bombs[i]->normalizedPos.x, bombs[i]->normalizedPos.y + step));
+					}
+					break;
+				}
+			}
+
+		} else if (Dir::Right == player.dir) {
+
+			sf::Vector2i inFrontOfPlayerPos = sf::Vector2i(normalizedPlayerPos.x + 1, normalizedPlayerPos.y);
+			
+			for (int i = 0; i < bombs.size(); i++) {
+				if (normalizedPlayerPos == bombs[i]->normalizedPos || inFrontOfPlayerPos == bombs[i]->normalizedPos) {
+					int step = 1;
+					if (gameField[bombs[i]->normalizedPos.x + step][bombs[i]->normalizedPos.y] == 0) {
+						while (gameField[bombs[i]->normalizedPos.x + (step + 1)][bombs[i]->normalizedPos.y] == 0) {
+							step++;
+						}
+						bombs[i]->move(sf::Vector2i(bombs[i]->normalizedPos.x + step, bombs[i]->normalizedPos.y));
+					}
+					break;
+				}
+			}
+
+		} else if (Dir::Left == player.dir) {
+
+			sf::Vector2i inFrontOfPlayerPos = sf::Vector2i(normalizedPlayerPos.x - 1, normalizedPlayerPos.y );
+			
+			for (int i = 0; i < bombs.size(); i++) {
+				if (normalizedPlayerPos == bombs[i]->normalizedPos || inFrontOfPlayerPos == bombs[i]->normalizedPos) {
+					int step = 1;
+					if (gameField[bombs[i]->normalizedPos.x  - step][bombs[i]->normalizedPos.y] == 0) {
+						while (gameField[bombs[i]->normalizedPos.x - (step + 1)][bombs[i]->normalizedPos.y] == 0) {
 							step++;
 						}
 						bombs[i]->move(sf::Vector2i(bombs[i]->normalizedPos.x - step, bombs[i]->normalizedPos.y));
