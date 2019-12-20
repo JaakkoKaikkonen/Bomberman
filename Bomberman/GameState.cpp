@@ -40,34 +40,46 @@ namespace Game {
 
 				if (!player1.dying && player1.bombCount < player1.bombLimit) {
 					if (event.key.code == sf::Keyboard::Space) {
-						sf::Vector2i normalizeBombPos = sf::Vector2i((sf::Vector2i(((player1.getPosition() + sf::Vector2f(player1.getSprite().getGlobalBounds().width / 2, player1.getSprite().getGlobalBounds().height / 2 + 5.0f)) / (float)TILESIZE)) * TILESIZE));
+						sf::Vector2i normalizedbombPos = sf::Vector2i(player1.getPosition() + sf::Vector2f(player1.getSprite().getGlobalBounds().width / 2, player1.getSprite().getGlobalBounds().height / 2 + 5.0f)) / TILESIZE;
 						bool overlap = false;
 						for (int i = 0; i < bombs.size(); i++) {
-							if (bombs[i]->normalizedPos == normalizeBombPos) {
+							if (bombs[i]->normalizedPos == normalizedbombPos) {
 								overlap = true;
 								break;
 							}
 						}
 						if (!overlap) {
-							bombs.emplace_back(new Bomb(data, player1, normalizeBombPos, player1.blastRadius));
+							bombs.emplace_back(new Bomb(data, player1, normalizedbombPos, player1.blastRadius));
 							player1.bombCount++;
 						}
 					}
 				}
 				if (!player2.dying && player2.bombCount < player2.bombLimit) {
 					if (event.key.code == sf::Keyboard::RControl) {
-						sf::Vector2i normalizeBombPos = sf::Vector2i((sf::Vector2i(((player2.getPosition() + sf::Vector2f(player2.getSprite().getGlobalBounds().width / 2, player2.getSprite().getGlobalBounds().height / 2 + 5.0f)) / (float)TILESIZE)) * TILESIZE));
+						sf::Vector2i normalizedbombPos = sf::Vector2i(player2.getPosition() + sf::Vector2f(player2.getSprite().getGlobalBounds().width / 2, player2.getSprite().getGlobalBounds().height / 2 + 5.0f)) / TILESIZE;
 						bool overlap = false;
 						for (int i = 0; i < bombs.size(); i++) {
-							if (bombs[i]->normalizedPos == normalizeBombPos) {
+							if (bombs[i]->normalizedPos == normalizedbombPos) {
 								overlap = true;
 								break;
 							}
 						}
 						if (!overlap) {
-							bombs.emplace_back(new Bomb(data, player2, normalizeBombPos, player2.blastRadius));
+							bombs.emplace_back(new Bomb(data, player2, normalizedbombPos, player2.blastRadius));
 							player2.bombCount++;
 						}
+					}
+				}
+
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+					if (player1.punchPowerUp) {
+						this->punchBomb(player1);
+					}
+				}
+
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) {
+					if (player2.punchPowerUp) {
+						this->punchBomb(player2);
 					}
 				}
 
@@ -124,10 +136,10 @@ namespace Game {
 		}
 
 		//Player Wall Collision
-		for (int i = 0; i < GAMEFIELD_HEIGHT; i++) {
-			for (int j = 0; j < GAMEFIELD_WIDTH; j++) {
+		for (int i = 0; i < GAMEFIELD_WIDTH; i++) {
+			for (int j = 0; j < GAMEFIELD_HEIGHT; j++) {
 				if (gameField[i][j] != 0) {
-					blockTile.setPosition(j * TILESIZE, i * TILESIZE);
+					blockTile.setPosition(i * TILESIZE, j * TILESIZE);
 					if (Collision::bomberManCollision(blockTile, player1.getSprite(), 0.5f, 0.05f, 0.1f, 0.1f)) {
 						player1.goToPreviousPosition();
 					}
@@ -154,7 +166,7 @@ namespace Game {
 				player2.kill();
 			}
 
-			if (bombs[i]->explosionTimer <= 0) {
+			if (bombs[i]->explosionTimer <= 0 || bombs[i]->outOfScreen()) {
 				bombs[i] = bombs[bombs.size() - 1];
 				bombs.pop_back();
 			}
@@ -186,20 +198,20 @@ namespace Game {
 
 		data->window.clear();
 			
-		for (int i = 0; i < GAMEFIELD_HEIGHT; i++) {
-			for (int j = 0; j < GAMEFIELD_WIDTH; j++) {
+		for (int i = 0; i < GAMEFIELD_WIDTH; i++) {
+			for (int j = 0; j < GAMEFIELD_HEIGHT; j++) {
 				if (gameField[i][j] == 0) {
-					if (gameField[i - 1][j] != 0) {
-						emptyBelowTile.setPosition(j * TILESIZE, i * TILESIZE);
+					if (gameField[i][j - 1] != 0) {
+						emptyBelowTile.setPosition(i * TILESIZE, j * TILESIZE);
 						data->window.draw(emptyBelowTile);
 					} else {
-						emptyTile.setPosition(j * TILESIZE, i * TILESIZE);
+						emptyTile.setPosition(i * TILESIZE, j * TILESIZE);
 						data->window.draw(emptyTile);
 					}
 				} else if (gameField[i][j] == 1) {
 
 				} else if (gameField[i][j] == 2) {
-					blockTile.setPosition(j * TILESIZE, i * TILESIZE);
+					blockTile.setPosition(i * TILESIZE, j * TILESIZE);
 					data->window.draw(blockTile);
 				}
 			}
@@ -235,11 +247,90 @@ namespace Game {
 	}
 
 
+	void GameState::punchBomb(Player player) {
+		
+		sf::Vector2i normalizedPlayerPos = sf::Vector2i((player.getPosition().x + player.getSprite().getGlobalBounds().width / 2) / (float)TILESIZE, (player.getPosition().y + player.getSprite().getGlobalBounds().height / 2) / (float)TILESIZE);
+
+		std::cout << "PlayerNormPos: " << normalizedPlayerPos.x << "\t" << normalizedPlayerPos.y << std::endl; 
+
+		if (Dir::Up == player.dir) {
+
+			sf::Vector2i inFrontOfPlayerPos = sf::Vector2i(normalizedPlayerPos.x, normalizedPlayerPos.y - 1);
+			
+			for (int i = 0; i < bombs.size(); i++) {
+				if (normalizedPlayerPos == bombs[i]->normalizedPos || inFrontOfPlayerPos == bombs[i]->normalizedPos) {
+					int step = 1;
+					if (gameField[bombs[i]->normalizedPos.x][bombs[i]->normalizedPos.y - step] != 0) {
+						while (gameField[bombs[i]->normalizedPos.x][bombs[i]->normalizedPos.y - step] != 0) {
+							step++;
+						}
+						bombs[i]->move(sf::Vector2i(bombs[i]->normalizedPos.x, bombs[i]->normalizedPos.y - step));
+					} 
+					break;
+				}
+			}
+
+		} else if (Dir::Down == player.dir) {
+
+			sf::Vector2i inFrontOfPlayerPos = sf::Vector2i(normalizedPlayerPos.x, normalizedPlayerPos.y + 1);
+			
+			for (int i = 0; i < bombs.size(); i++) {
+				if (normalizedPlayerPos == bombs[i]->normalizedPos || inFrontOfPlayerPos == bombs[i]->normalizedPos) {
+					int step = 1;
+					if (gameField[bombs[i]->normalizedPos.x][bombs[i]->normalizedPos.y + step] != 0) {
+						while (gameField[bombs[i]->normalizedPos.x][bombs[i]->normalizedPos.y + step] != 0) {
+							step++;
+						}
+						bombs[i]->move(sf::Vector2i(bombs[i]->normalizedPos.x, bombs[i]->normalizedPos.y + step));
+					}
+					break;
+				}
+			}
+
+		} else if (Dir::Right == player.dir) {
+
+			sf::Vector2i inFrontOfPlayerPos = sf::Vector2i(normalizedPlayerPos.x + 1, normalizedPlayerPos.y);
+			
+			for (int i = 0; i < bombs.size(); i++) {
+				if (normalizedPlayerPos == bombs[i]->normalizedPos || inFrontOfPlayerPos == bombs[i]->normalizedPos) {
+					int step = 1;
+					if (gameField[bombs[i]->normalizedPos.x + step][bombs[i]->normalizedPos.y] != 0) {
+						while (gameField[bombs[i]->normalizedPos.x + step][bombs[i]->normalizedPos.y] != 0) {
+							step++;
+						}
+						bombs[i]->move(sf::Vector2i(bombs[i]->normalizedPos.x + step, bombs[i]->normalizedPos.y));
+					}
+					break;
+				}
+			}
+
+		} else if (Dir::Left == player.dir) {
+
+			sf::Vector2i inFrontOfPlayerPos = sf::Vector2i(normalizedPlayerPos.x - 1, normalizedPlayerPos.y );
+			
+			for (int i = 0; i < bombs.size(); i++) {
+				if (normalizedPlayerPos == bombs[i]->normalizedPos || inFrontOfPlayerPos == bombs[i]->normalizedPos) {
+					int step = 1;
+					if (gameField[bombs[i]->normalizedPos.x  - step][bombs[i]->normalizedPos.y] != 0) {
+						while (gameField[bombs[i]->normalizedPos.x - step][bombs[i]->normalizedPos.y] != 0) {
+							step++;
+						}
+						bombs[i]->move(sf::Vector2i(bombs[i]->normalizedPos.x - step, bombs[i]->normalizedPos.y));
+					}
+					break;
+				}
+			}
+
+		}
+
+	}
+
+
 	void GameState::generateMap() {
 
-		for (int i = 0; i < GAMEFIELD_HEIGHT; i++) {
-			for (int j = 0; j < GAMEFIELD_WIDTH; j++) {
-				if (i == 0 || i == GAMEFIELD_HEIGHT - 1 || j == 0 || j == GAMEFIELD_WIDTH - 1 || (i % 2 == 0 && j % 2 == 0)) {
+		for (int i = 0; i < GAMEFIELD_WIDTH; i++) {
+			for (int j = 0; j < GAMEFIELD_HEIGHT; j++) {
+				if (i == 0 || i == GAMEFIELD_WIDTH - 1 || j == 0 || j == GAMEFIELD_HEIGHT - 1 || (i % 2 == 0 && j % 2 == 0)) {
 					gameField[i][j] = 2;
 				} else {
 					gameField[i][j] = 0;
@@ -247,8 +338,8 @@ namespace Game {
 			}
 		}
 
-		for (int i = 0; i < GAMEFIELD_HEIGHT; i++) {
-			for (int j = 0; j < GAMEFIELD_WIDTH; j++) {
+		for (int i = 0; i < GAMEFIELD_WIDTH; i++) {
+			for (int j = 0; j < GAMEFIELD_HEIGHT; j++) {
 				if (gameField[i][j] != 2) {
 					float change = (float)rand() / RAND_MAX;
 					if (change >= 0.16f) {
@@ -261,21 +352,21 @@ namespace Game {
 		gameField[1][1] = 0;
 		gameField[2][1] = 0;
 		gameField[1][2] = 0;
-		gameField[GAMEFIELD_HEIGHT - 2][GAMEFIELD_WIDTH - 2] = 0;
-		gameField[GAMEFIELD_HEIGHT - 3][GAMEFIELD_WIDTH - 2] = 0;
-		gameField[GAMEFIELD_HEIGHT - 2][GAMEFIELD_WIDTH - 3] = 0;
-		gameField[GAMEFIELD_HEIGHT - 2][1] = 0;
-		gameField[GAMEFIELD_HEIGHT - 2][2] = 0;
-		gameField[GAMEFIELD_HEIGHT - 3][1] = 0;
-		gameField[1][GAMEFIELD_WIDTH - 2] = 0;
-		gameField[2][GAMEFIELD_WIDTH - 2] = 0;
-		gameField[1][GAMEFIELD_WIDTH - 3] = 0;
+		gameField[GAMEFIELD_WIDTH - 2][GAMEFIELD_HEIGHT - 2] = 0;
+		gameField[GAMEFIELD_WIDTH - 2][GAMEFIELD_HEIGHT - 3] = 0;
+		gameField[GAMEFIELD_WIDTH - 3][GAMEFIELD_HEIGHT - 2] = 0;
+		gameField[1][GAMEFIELD_HEIGHT - 2] = 0;
+		gameField[2][GAMEFIELD_HEIGHT - 2] = 0;
+		gameField[1][GAMEFIELD_HEIGHT - 3] = 0;
+		gameField[GAMEFIELD_WIDTH - 2][1] = 0;
+		gameField[GAMEFIELD_WIDTH - 2][2] = 0;
+		gameField[GAMEFIELD_WIDTH - 3][1] = 0;
 
 		brickTiles.clear();
-		for (int i = 0; i < GAMEFIELD_HEIGHT; i++) {
-			for (int j = 0; j < GAMEFIELD_WIDTH; j++) {
+		for (int i = 0; i < GAMEFIELD_WIDTH; i++) {
+			for (int j = 0; j < GAMEFIELD_HEIGHT; j++) {
 				if (gameField[i][j] == 1) {
-					brickTiles.emplace_back(new BrickTile(data, sf::Vector2f(j * TILESIZE, i * TILESIZE)));
+					brickTiles.emplace_back(new BrickTile(data, sf::Vector2f(i * TILESIZE, j * TILESIZE)));
 				}
 			}
 		}
@@ -294,5 +385,8 @@ namespace Game {
 
 		gameOver = false;
 	}
+
+
+
 
 }

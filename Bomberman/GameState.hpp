@@ -11,8 +11,8 @@
 #include "imgui.h"
 #include "imgui-SFML.h"
 
-#include "Player.h"
 #include "Bomb.h"
+#include "Player.h"
 #include "BrickTile.h"
 #include "PowerUp.h"
 #include <vector>
@@ -29,8 +29,11 @@ namespace Game {
 		void draw();
 	
 	private:
+		void punchBomb(Player player);
+
 		void generateMap();
 		void reset();
+
 
 	private:
 		gameDataRef data;
@@ -53,7 +56,7 @@ namespace Game {
 
 		sf::Text gameOverText;
 
-		int gameField[GAMEFIELD_HEIGHT][GAMEFIELD_WIDTH];
+		int gameField[GAMEFIELD_WIDTH][GAMEFIELD_HEIGHT];
 
 	};
 

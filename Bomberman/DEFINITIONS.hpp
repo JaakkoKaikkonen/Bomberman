@@ -19,7 +19,7 @@
 
 enum class Dir { Up, Down, Right, Left };
 
-enum class PowerUpName { None, Fire, Bomb, Speed, Throw };
+enum class PowerUpName { None, Fire, Bomb, Speed, Punch };
 
 
 #define BLOCK_TILE sf::IntRect(18, 0, 16, 16)

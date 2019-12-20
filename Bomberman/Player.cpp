@@ -121,6 +121,7 @@ namespace Game {
 
 	}
 
+
 	void Player::draw() {
 		if (!dead) {
 
@@ -161,7 +162,7 @@ namespace Game {
 	void Player::reset() {
 		dead = false;
 		dying = false;
-		blastRadius = 1;
+		blastRadius = 2;
 		speed = 3.0f;
 		bombLimit = 1;
 		bombCount = 0;

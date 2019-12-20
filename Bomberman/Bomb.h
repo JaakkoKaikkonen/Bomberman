@@ -21,9 +21,13 @@ namespace Game {
 
 		void update();
 
-		void explode(int gameField[GAMEFIELD_HEIGHT][GAMEFIELD_WIDTH], std::vector<BrickTile*>& brickTiles, std::vector<PowerUp*>& powerUps, std::vector<Bomb*>& bombs);
+		void move(sf::Vector2i position);
+
+		void explode(int gameField[GAMEFIELD_WIDTH][GAMEFIELD_HEIGHT], std::vector<BrickTile*>& brickTiles, std::vector<PowerUp*>& powerUps, std::vector<Bomb*>& bombs);
 
 		bool hits(Player& player);
+
+		bool outOfScreen();
 
 		void draw();
 
@@ -81,6 +85,16 @@ namespace Game {
 		int explosionDelayAfterHitByExplosion = 5;
 
 		bool hitByExplosion = false;
+
+
+		float bombMoveSpeed = 7.0f;
+
+		float moveAnimationPercentage = 0.0f;
+		float moveAnimationPercentageStep;
+
+		bool moving = false;
+
+		sf::Vector2i newPosition;
 
 	};
 

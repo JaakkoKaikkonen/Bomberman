@@ -8,6 +8,8 @@ namespace utility {
 
 	float lerp(const float& value, float min, float max);
 
+	sf::Vector2f lerp(const float& value, sf::Vector2f min, sf::Vector2f max);
+
 	float map(const float& value, float min1, float max1, float min2, float max2);
 
 	float clamp(const float& value, float min, float max);

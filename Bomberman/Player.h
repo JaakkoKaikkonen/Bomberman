@@ -3,6 +3,9 @@
 #include "Game.hpp"
 #include "DEFINITIONS.hpp"
 #include "Animation.hpp"
+#include "BrickTile.h"
+//#include "Bomb.h"
+#include <vector>
 
 namespace Game {
 
@@ -33,12 +36,16 @@ namespace Game {
 		bool dead = false;
 		bool dying = false;
 
-		int blastRadius = 1;
+		int blastRadius = 2;
 
 		float speed = 3.0f;
 
 		int bombLimit = 1;
 		int bombCount = 0;
+
+		bool punchPowerUp = true;
+
+		Dir dir = Dir::Down;
 
 	private:
 		gameDataRef data;
@@ -59,8 +66,6 @@ namespace Game {
 
 		sf::IntRect dyingAnimationFrames[6];
 		Animation dyingAnimation;
-
-		Dir dir = Dir::Down;
 
 		sf::Vector2f previousPosition;
 

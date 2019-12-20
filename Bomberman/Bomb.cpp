@@ -1,5 +1,6 @@
 #include "Bomb.h"
 #include "Collision.hpp"
+#include "Utility.hpp"
 
 #include <iostream>
 
@@ -28,7 +29,9 @@ namespace Game {
 		  blastRadius(blastRadius)
 	{	
 		bomb.setScale(2.5f, 2.5f);
-		bomb.setPosition(sf::Vector2f(normalizedPos + sf::Vector2i(5, 5)));
+		bomb.setPosition(sf::Vector2f((normalizedPos * TILESIZE) + sf::Vector2i(5, 5)));
+
+		std::cout << normalizedPos.x << "\t" << normalizedPos.y << std::endl;
 
 		explosionMiddle.setScale(3.125f, 3.125f);
 		explosionUp.setScale(3.125f, 3.125f);
@@ -49,187 +52,223 @@ namespace Game {
 		if (exploded) {
 			explosionTimer--;
 		}
-	}
 
-	void Bomb::explode(int gameField[GAMEFIELD_HEIGHT][GAMEFIELD_WIDTH], std::vector<BrickTile*>& brickTiles, std::vector<PowerUp*>& powerUps, std::vector<Bomb*>& bombs) {
-		
-		//std::cout << "Explode" << std::endl;
-
-		player.bombCount--;
-
-		sf::Vector2i normalizedBombPos = sf::Vector2i(bomb.getPosition() / (float)TILESIZE);
-
-		bool upHit = false;
-		bool DownHit = false;
-		bool RightHit = false;
-		bool LeftHit = false;
-
-		explosionAnimationFrameList.clear();
-		explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionMiddle });
-
-		for (int length = 1; length <= blastRadius; length++) {
-
-			if (!upHit && !hitByExplosion) {
-				for (int i = 0; i < bombs.size(); i++) {
-					if (sf::Vector2i(bombs[i]->getPosition().x / TILESIZE, bombs[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y - length)) {
-						hitByExplosion = true;
-						bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
-						upHit = true;
-						break;
-					}
-				}
+		if (moving) {
+			moveAnimationPercentage += moveAnimationPercentageStep;
+			if (moveAnimationPercentage >= 1.0f) {
+				bomb.setPosition(sf::Vector2f((newPosition * TILESIZE) + sf::Vector2i(5, 5)));
+				normalizedPos = sf::Vector2i(bomb.getPosition() / (float)TILESIZE);
+				moving = false;
+				moveAnimationPercentage = 0.0f;
+			} else {
+				bomb.setPosition(utility::lerp(moveAnimationPercentage, sf::Vector2f(normalizedPos * TILESIZE) + sf::Vector2f(5, 5), sf::Vector2f((newPosition * TILESIZE) + sf::Vector2i(5, 5))));
 			}
-			if (!upHit) {
-				for (int i = 0; i < powerUps.size(); i++) {
-					if (sf::Vector2i(powerUps[i]->getPosition().x / TILESIZE, powerUps[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y - length)) {
-						powerUps[i]->burn();
-						upHit = true;
-						break;
-					}
-				}
-			}
-			if (!upHit) {
-				if (gameField[normalizedBombPos.y - length][normalizedBombPos.x] != 0) {
-					upHit = true;
-					if (gameField[normalizedBombPos.y - length][normalizedBombPos.x] == 1) {
-						gameField[normalizedBombPos.y - length][normalizedBombPos.x] = 0;
-						for (int i = 0; i < brickTiles.size(); i++) {
-							if (sf::Vector2i(brickTiles[i]->getPosition().x / TILESIZE, brickTiles[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y - length)) {
-								brickTiles[i]->burn();
-							}
-						}
-					}
-				} else {
-					if (length == blastRadius) {
-						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y - length) * TILESIZE) , &explosionUp } );
-					} else {
-						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y - length) * TILESIZE) , &explosionVerticalPart } );
-					}
-				}
-			}
-
-			if (!DownHit && !hitByExplosion) {
-				for (int i = 0; i < bombs.size(); i++) {
-					if (sf::Vector2i(bombs[i]->getPosition().x / TILESIZE, bombs[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y + length)) {
-						hitByExplosion = true;
-						bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
-						DownHit = true;
-						break;
-					}
-				}
-			}
-			if (!DownHit) {
-				for (int i = 0; i < powerUps.size(); i++) {
-					if (sf::Vector2i(powerUps[i]->getPosition().x / TILESIZE, powerUps[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y + length)) {
-						powerUps[i]->burn();
-						DownHit = true;
-						break;
-					}
-				}
-			}
-			if (!DownHit) {
-				if (gameField[normalizedBombPos.y + length][normalizedBombPos.x] != 0) {
-					DownHit = true;
-					if (gameField[normalizedBombPos.y + length][normalizedBombPos.x] == 1) {
-						gameField[normalizedBombPos.y + length][normalizedBombPos.x] = 0;
-						for (int i = 0; i < brickTiles.size(); i++) {
-							if (sf::Vector2i(brickTiles[i]->getPosition().x / TILESIZE, brickTiles[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y + length)) {
-								brickTiles[i]->burn();
-							}
-						}
-					}
-				} else {
-					if (length == blastRadius) {
-						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y + length) * TILESIZE) , &explosionDown } );
-					} else {
-						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y + length) * TILESIZE) , &explosionVerticalPart } );
-					}
-				}
-			}
-
-			if (!RightHit && !hitByExplosion) {
-				for (int i = 0; i < bombs.size(); i++) {
-					if (sf::Vector2i(bombs[i]->getPosition().x / TILESIZE, bombs[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x + length, normalizedBombPos.y)) {
-						hitByExplosion = true;
-						bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
-						RightHit = true;
-						break;
-					}
-				}
-			}
-			if (!RightHit) {
-				for (int i = 0; i < powerUps.size(); i++) {
-					if (sf::Vector2i(powerUps[i]->getPosition().x / TILESIZE, powerUps[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x + length, normalizedBombPos.y)) {
-						powerUps[i]->burn();
-						RightHit = true;
-						break;
-					}
-				}
-			}
-			if (!RightHit) { 
-				if (gameField[normalizedBombPos.y][normalizedBombPos.x + length] != 0) {
-					RightHit = true;
-					if (gameField[normalizedBombPos.y][normalizedBombPos.x + length] == 1) {
-						gameField[normalizedBombPos.y][normalizedBombPos.x + length] = 0;
-						for (int i = 0; i < brickTiles.size(); i++) {
-							if (sf::Vector2i(brickTiles[i]->getPosition().x / TILESIZE, brickTiles[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x + length, normalizedBombPos.y)) {
-								brickTiles[i]->burn();
-							}
-						}
-					}
-				} else {
-					if (length == blastRadius) {
-						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f((normalizedBombPos.x + length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionRight } );
-					} else {
-						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f((normalizedBombPos.x + length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionHorizontalPart } );
-					}
-				}
-			}
-
-			if (!LeftHit && !hitByExplosion) {
-				for (int i = 0; i < bombs.size(); i++) {
-					if (sf::Vector2i(bombs[i]->getPosition().x / TILESIZE, bombs[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x - length, normalizedBombPos.y)) {
-						hitByExplosion = true;
-						bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
-						LeftHit = true;
-						break;
-					}
-				}
-			}
-			if (!LeftHit) {
-				for (int i = 0; i < powerUps.size(); i++) {
-					if (sf::Vector2i(powerUps[i]->getPosition().x / TILESIZE, powerUps[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x - length, normalizedBombPos.y)) {
-						powerUps[i]->burn();
-						LeftHit = true;
-						break;
-					}
-				}
-			}
-			if (!LeftHit) {
-				if (gameField[normalizedBombPos.y][normalizedBombPos.x - length] != 0) {
-					LeftHit = true;
-					if (gameField[normalizedBombPos.y][normalizedBombPos.x - length] == 1) {
-						gameField[normalizedBombPos.y][normalizedBombPos.x - length] = 0;
-						for (int i = 0; i < brickTiles.size(); i++) {
-							if (sf::Vector2i(brickTiles[i]->getPosition().x / TILESIZE, brickTiles[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x - length, normalizedBombPos.y)) {
-								brickTiles[i]->burn();
-							}
-						}
-					}
-				} else {
-					if (length == blastRadius) {
-						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f((normalizedBombPos.x - length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionLeft } );
-					} else {
-						explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f((normalizedBombPos.x - length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionHorizontalPart } );
-					}
-				}
-			}
-
 		}
 
+	}
+
+	void Bomb::move(sf::Vector2i position) {
+
+		moving = true;
+		newPosition = position;
+
+		sf::Vector2f distance = sf::Vector2f((newPosition * TILESIZE) + sf::Vector2i(5, 5)) - bomb.getPosition();
+
+		moveAnimationPercentageStep = 1.0f / (sqrt((distance.x * distance.x) + (distance.y * distance.y)) / bombMoveSpeed);
+
+	}
+
+	void Bomb::explode(int gameField[GAMEFIELD_WIDTH][GAMEFIELD_HEIGHT], std::vector<BrickTile*>& brickTiles, std::vector<PowerUp*>& powerUps, std::vector<Bomb*>& bombs) {
 		
-		exploded = true;
-		shouldExplode = false;
+		if (!moving) {
+
+			//std::cout << "Explode" << std::endl;
+
+			player.bombCount--;
+
+			sf::Vector2i normalizedBombPos = sf::Vector2i(bomb.getPosition() / (float)TILESIZE);
+
+			//If bomb lands on powerUp burn powerUp
+			for (int i = 0; i < powerUps.size(); i++) {
+				if (sf::Vector2i(powerUps[i]->getPosition().x / TILESIZE, powerUps[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y)) {
+					powerUps[i]->burn();
+					break;
+				}
+			}
+
+			bool upHit = false;
+			bool DownHit = false;
+			bool RightHit = false;
+			bool LeftHit = false;
+
+			explosionAnimationFrameList.clear();
+			explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionMiddle });
+
+			for (int length = 1; length <= blastRadius; length++) {
+
+				if (!upHit && !hitByExplosion) {
+					for (int i = 0; i < bombs.size(); i++) {
+						if (sf::Vector2i(bombs[i]->getPosition().x / TILESIZE, bombs[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y - length)) {
+							hitByExplosion = true;
+							bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
+							upHit = true;
+							break;
+						}
+					}
+				}
+				if (!upHit) {
+					for (int i = 0; i < powerUps.size(); i++) {
+						if (sf::Vector2i(powerUps[i]->getPosition().x / TILESIZE, powerUps[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y - length)) {
+							powerUps[i]->burn();
+							upHit = true;
+							break;
+						}
+					}
+				}
+				if (!upHit) {
+					if (gameField[normalizedBombPos.x][normalizedBombPos.y - length] != 0) {
+						upHit = true;
+						if (gameField[normalizedBombPos.x][normalizedBombPos.y - length] == 1) {
+							gameField[normalizedBombPos.x][normalizedBombPos.y - length] = 0;
+							for (int i = 0; i < brickTiles.size(); i++) {
+								if (sf::Vector2i(brickTiles[i]->getPosition().x / TILESIZE, brickTiles[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y - length)) {
+									brickTiles[i]->burn();
+								}
+							}
+						}
+					} else {
+						if (length == blastRadius) {
+							explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y - length) * TILESIZE) , &explosionUp } );
+						} else {
+							explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y - length) * TILESIZE) , &explosionVerticalPart } );
+						}
+					}
+				}
+
+				if (!DownHit && !hitByExplosion) {
+					for (int i = 0; i < bombs.size(); i++) {
+						if (sf::Vector2i(bombs[i]->getPosition().x / TILESIZE, bombs[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y + length)) {
+							hitByExplosion = true;
+							bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
+							DownHit = true;
+							break;
+						}
+					}
+				}
+				if (!DownHit) {
+					for (int i = 0; i < powerUps.size(); i++) {
+						if (sf::Vector2i(powerUps[i]->getPosition().x / TILESIZE, powerUps[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y + length)) {
+							powerUps[i]->burn();
+							DownHit = true;
+							break;
+						}
+					}
+				}
+				if (!DownHit) {
+					if (gameField[normalizedBombPos.x][normalizedBombPos.y + length] != 0) {
+						DownHit = true;
+						if (gameField[normalizedBombPos.x][normalizedBombPos.y + length] == 1) {
+							gameField[normalizedBombPos.x][normalizedBombPos.y + length] = 0;
+							for (int i = 0; i < brickTiles.size(); i++) {
+								if (sf::Vector2i(brickTiles[i]->getPosition().x / TILESIZE, brickTiles[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y + length)) {
+									brickTiles[i]->burn();
+								}
+							}
+						}
+					} else {
+						if (length == blastRadius) {
+							explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y + length) * TILESIZE) , &explosionDown } );
+						} else {
+							explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f(normalizedBombPos.x * TILESIZE, (normalizedBombPos.y + length) * TILESIZE) , &explosionVerticalPart } );
+						}
+					}
+				}
+
+				if (!RightHit && !hitByExplosion) {
+					for (int i = 0; i < bombs.size(); i++) {
+						if (sf::Vector2i(bombs[i]->getPosition().x / TILESIZE, bombs[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x + length, normalizedBombPos.y)) {
+							hitByExplosion = true;
+							bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
+							RightHit = true;
+							break;
+						}
+					}
+				}
+				if (!RightHit) {
+					for (int i = 0; i < powerUps.size(); i++) {
+						if (sf::Vector2i(powerUps[i]->getPosition().x / TILESIZE, powerUps[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x + length, normalizedBombPos.y)) {
+							powerUps[i]->burn();
+							RightHit = true;
+							break;
+						}
+					}
+				}
+				if (!RightHit) { 
+					if (gameField[normalizedBombPos.x + length][normalizedBombPos.y] != 0) {
+						RightHit = true;
+						if (gameField[normalizedBombPos.x + length][normalizedBombPos.y] == 1) {
+							gameField[normalizedBombPos.x + length][normalizedBombPos.y] = 0;
+							for (int i = 0; i < brickTiles.size(); i++) {
+								if (sf::Vector2i(brickTiles[i]->getPosition().x / TILESIZE, brickTiles[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x + length, normalizedBombPos.y)) {
+									brickTiles[i]->burn();
+								}
+							}
+						}
+					} else {
+						if (length == blastRadius) {
+							explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f((normalizedBombPos.x + length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionRight } );
+						} else {
+							explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f((normalizedBombPos.x + length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionHorizontalPart } );
+						}
+					}
+				}
+
+				if (!LeftHit && !hitByExplosion) {
+					for (int i = 0; i < bombs.size(); i++) {
+						if (sf::Vector2i(bombs[i]->getPosition().x / TILESIZE, bombs[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x - length, normalizedBombPos.y)) {
+							hitByExplosion = true;
+							bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
+							LeftHit = true;
+							break;
+						}
+					}
+				}
+				if (!LeftHit) {
+					for (int i = 0; i < powerUps.size(); i++) {
+						if (sf::Vector2i(powerUps[i]->getPosition().x / TILESIZE, powerUps[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x - length, normalizedBombPos.y)) {
+							powerUps[i]->burn();
+							LeftHit = true;
+							break;
+						}
+					}
+				}
+				if (!LeftHit) {
+					if (gameField[normalizedBombPos.x - length][normalizedBombPos.y] != 0) {
+						LeftHit = true;
+						if (gameField[normalizedBombPos.x - length][normalizedBombPos.y] == 1) {
+							gameField[normalizedBombPos.x - length][normalizedBombPos.y] = 0;
+							for (int i = 0; i < brickTiles.size(); i++) {
+								if (sf::Vector2i(brickTiles[i]->getPosition().x / TILESIZE, brickTiles[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x - length, normalizedBombPos.y)) {
+									brickTiles[i]->burn();
+								}
+							}
+						}
+					} else {
+						if (length == blastRadius) {
+							explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f((normalizedBombPos.x - length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionLeft } );
+						} else {
+							explosionAnimationFrameList.emplace_back(new ExplosionAnimationFrame { sf::Vector2f((normalizedBombPos.x - length) * TILESIZE, normalizedBombPos.y * TILESIZE) , &explosionHorizontalPart } );
+						}
+					}
+				}
+
+			}
+
+		
+			exploded = true;
+			shouldExplode = false;
+
+		}
 
 	}
 
@@ -242,6 +281,15 @@ namespace Game {
 			}
 		}
 		return false;
+	}
+
+	bool Bomb::outOfScreen() {
+		if (bomb.getPosition().x > SCREEN_WIDTH || bomb.getPosition().x + bomb.getGlobalBounds().width < 0 || bomb.getPosition().y > SCREEN_HEIGHT || bomb.getPosition().y + bomb.getGlobalBounds().height < 0) {
+			player.bombCount--;
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 

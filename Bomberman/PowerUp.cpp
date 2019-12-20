@@ -15,7 +15,7 @@ namespace Game {
 			powerUpSprite.setTextureRect(POWER_UP_BOMB);
 		} else if (PowerUpName::Speed == powerUp) {
 			powerUpSprite.setTextureRect(POWER_UP_SPEED);
-		} else if (PowerUpName::Throw == powerUp) {
+		} else if (PowerUpName::Punch == powerUp) {
 			powerUpSprite.setTextureRect(POWER_UP_THROW);
 		}
 
@@ -34,8 +34,8 @@ namespace Game {
 					player.bombLimit += 1;
 				} else if(PowerUpName::Speed == powerUp) {
 					player.speed += 0.5f;
-				} else if(PowerUpName::Throw == powerUp) {
-				
+				} else if(PowerUpName::Punch == powerUp) {
+					player.punchPowerUp = true;
 				} 
 
 				return true;

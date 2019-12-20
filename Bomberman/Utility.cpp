@@ -12,6 +12,10 @@ namespace utility {
 		return (max - min) * value + min;
 	}
 
+	sf::Vector2f lerp(const float& value, sf::Vector2f min, sf::Vector2f max) {
+		return sf::Vector2f((max.x - min.x) * value + min.x, (max.y - min.y) * value + min.y) ;
+	}
+
 	float map(const float& value, float min1, float max1, float min2, float max2) {
 		return lerp(normalize(value, min1, max1), min2, max2);
 	}
