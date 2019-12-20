@@ -20,7 +20,7 @@ namespace Game {
 		}
 
 		powerUpSprite.setPosition(position);
-		powerUpSprite.setScale(3.0f, 3.0f);
+		powerUpSprite.setScale(3.125f, 3.125f);
 	}
 
 

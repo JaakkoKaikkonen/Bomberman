@@ -36,10 +36,17 @@ namespace Game {
 				data->window.close();
 			}
 
-			if (event.type == sf::Event::KeyPressed) {
+
+			if (event.type == sf::Event::EventType::JoystickButtonPressed) {
+                std::cout << "Joystick ID : " << event.joystickButton.joystickId << std::endl;
+                std::cout << "Joystick Button : " << event.joystickButton.button << std::endl;
+			}
+
+
+			if (event.type == sf::Event::KeyPressed || event.type == sf::Event::EventType::JoystickButtonPressed) {
 
 				if (!player1.dying && player1.bombCount < player1.bombLimit) {
-					if (event.key.code == sf::Keyboard::Space) {
+					if (event.key.code == sf::Keyboard::Space || sf::Joystick::isButtonPressed(0, 0)) {
 						sf::Vector2i normalizedbombPos = sf::Vector2i(player1.getPosition() + sf::Vector2f(player1.getSprite().getGlobalBounds().width / 2, player1.getSprite().getGlobalBounds().height / 2 + 5.0f)) / TILESIZE;
 						bool overlap = false;
 						for (int i = 0; i < bombs.size(); i++) {
@@ -55,7 +62,7 @@ namespace Game {
 					}
 				}
 				if (!player2.dying && player2.bombCount < player2.bombLimit) {
-					if (event.key.code == sf::Keyboard::RControl) {
+					if (event.key.code == sf::Keyboard::RControl || sf::Joystick::isButtonPressed(1, 0)) {
 						sf::Vector2i normalizedbombPos = sf::Vector2i(player2.getPosition() + sf::Vector2f(player2.getSprite().getGlobalBounds().width / 2, player2.getSprite().getGlobalBounds().height / 2 + 5.0f)) / TILESIZE;
 						bool overlap = false;
 						for (int i = 0; i < bombs.size(); i++) {
@@ -71,13 +78,13 @@ namespace Game {
 					}
 				}
 
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Joystick::isButtonPressed(0, 2)) {
 					if (player1.punchPowerUp) {
 						this->punchBomb(player1);
 					}
 				}
 
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Joystick::isButtonPressed(1, 2)) {
 					if (player2.punchPowerUp) {
 						this->punchBomb(player2);
 					}
@@ -85,38 +92,50 @@ namespace Game {
 
 			}
 		}
+
+
+		float C1positionX = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
+		float C1positionY = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
 		
 		if (!player1.dying) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || C1positionY < -80) {
 				player1.move(Dir::Up);
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || C1positionY > 80) {
 				player1.move(Dir::Down);
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || C1positionX > 80) {
 				player1.move(Dir::Right);
-			} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+			} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) || C1positionX < -80){
 				player1.move(Dir::Left);
 			}
 		}
 
+		float C2positionX = sf::Joystick::getAxisPosition(1, sf::Joystick::X);
+		float C2positionY = sf::Joystick::getAxisPosition(1, sf::Joystick::Y);
+
 		if (!player2.dying) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || C2positionY < -80) {
 				player2.move(Dir::Up);
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)  ) {
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || C2positionY > 80) {
 				player2.move(Dir::Down);
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)  ) {
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || C2positionX > 80) {
 				player2.move(Dir::Right);
-			} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+			} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || C2positionX < -80){
 				player2.move(Dir::Left);
 			}
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) || sf::Joystick::isButtonPressed(0, 7)) {
 			this->reset();
 		}
 		
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			data->window.close();
 		}
+
+
+		/*std::cout << "Joystick 0 connected: " << sf::Joystick::isConnected(0) << std::endl;
+		std::cout << "Joystick 1 connected: " << sf::Joystick::isConnected(1) << std::endl;
+		std::cout << sf::Joystick::getButtonCount(0) << std::endl;*/
 
 	}
 
