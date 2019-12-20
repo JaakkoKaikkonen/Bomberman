@@ -80,12 +80,14 @@ namespace Game {
 
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Joystick::isButtonPressed(0, 2)) {
 					if (player1.punchPowerUp) {
+						player1.punch();
 						this->punchBomb(player1);
 					}
 				}
 
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Joystick::isButtonPressed(1, 2)) {
 					if (player2.punchPowerUp) {
+						player2.punch();
 						this->punchBomb(player2);
 					}
 				}

@@ -44,6 +44,11 @@ namespace Game {
 			dyingAnimationFrames[4] = BOMBERMAN_1_DEAD_5;
 			dyingAnimationFrames[5] = BOMBERMAN_1_DEAD_6;
 
+			punchUpFrame = BOMBERMAN_1_PUNCH_UP;
+			punchDownFrame = BOMBERMAN_1_PUNCH_DOWN;
+			punchRightFrame = BOMBERMAN_1_PUNCH_RIGHT;
+			punchLeftFrame = BOMBERMAN_1_PUNCH_LEFT;
+
 		} else if (playerNumber == 2) {
 
 			walkingDownAnimationFrames[0] = BOMBERMAN_2_WALK_DOWN_2;
@@ -73,6 +78,11 @@ namespace Game {
 			dyingAnimationFrames[4] = BOMBERMAN_2_DEAD_5;
 			dyingAnimationFrames[5] = BOMBERMAN_2_DEAD_6;
 
+			punchUpFrame = BOMBERMAN_2_PUNCH_UP;
+			punchDownFrame = BOMBERMAN_2_PUNCH_DOWN;
+			punchRightFrame = BOMBERMAN_2_PUNCH_RIGHT;
+			punchLeftFrame = BOMBERMAN_2_PUNCH_LEFT;
+
 		}
 	}
 
@@ -98,6 +108,7 @@ namespace Game {
 		}
 	}
 
+
 	void Player::update() {
 
 		if (dying) {
@@ -119,6 +130,12 @@ namespace Game {
 		}
 		moving = false;
 
+		punchTimer++;
+
+	}
+
+	void Player::punch() {
+		punchTimer = 0;
 	}
 
 
@@ -131,7 +148,17 @@ namespace Game {
 
 			} else {
 
-				if (moved) {
+				if (punchTimer <= punchTime) {
+					if (Dir::Up == dir) {
+						player.setTextureRect(punchUpFrame);
+					} else if (Dir::Down == dir) {
+						player.setTextureRect(punchDownFrame);
+					} else if (Dir::Right == dir) {
+						player.setTextureRect(punchRightFrame);
+					} else if (Dir::Left == dir) {
+						player.setTextureRect(punchLeftFrame);
+					}
+				} else if (moved) {
 					if (Dir::Up == dir) {
 						walkingUpAnimation.animate();
 					} else if (Dir::Down == dir) {

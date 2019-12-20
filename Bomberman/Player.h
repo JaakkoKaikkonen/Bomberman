@@ -20,6 +20,8 @@ namespace Game {
 
 		void goToPreviousPosition();
 
+		void punch();
+
 		void draw();
 
 		void kill() { dying = true; }
@@ -67,6 +69,8 @@ namespace Game {
 		sf::IntRect dyingAnimationFrames[6];
 		Animation dyingAnimation;
 
+		sf::IntRect punchUpFrame, punchDownFrame, punchRightFrame, punchLeftFrame;
+
 		sf::Vector2f previousPosition;
 
 		bool moving = false;
@@ -74,6 +78,9 @@ namespace Game {
 
 		int dyingTime = 60;
 		int dyingTimer = 0;
+
+		int punchTimer = 25;
+		int punchTime = 25;
 
 	};
 
