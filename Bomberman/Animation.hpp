@@ -13,7 +13,7 @@ namespace Game {
 
 		void animation();
 
-		void reset() { animationiterator = 0; }
+		void reset();
 
 	private:
 		sf::Clock clock;

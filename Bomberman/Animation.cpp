@@ -10,7 +10,6 @@ namespace Game {
 	{
 	}
 
-
 	void Animation::animate() {
 		if (clock.getElapsedTime().asSeconds() > animationTime / size) {
 			if (animationiterator < size - 1) {
@@ -38,6 +37,11 @@ namespace Game {
 			sprite.setTextureRect(animationFrames[animationiterator]);
 			clock.restart();
 		}
+	}
+
+	void Animation::reset() {
+		animationiterator = 0;
+		start = true;
 	}
 
 }

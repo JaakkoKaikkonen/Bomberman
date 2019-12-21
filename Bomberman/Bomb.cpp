@@ -58,6 +58,7 @@ namespace Game {
 			moveAnimationPercentage += moveAnimationPercentageStep;
 			if (moveAnimationPercentage >= 1.0f) {
 				bomb.setPosition(sf::Vector2f((newPosition * TILESIZE) + sf::Vector2i(5, 5)));
+				startPosition = bomb.getPosition();
 				moving = false;
 				moveAnimationPercentage = 0.0f;
 			} else {

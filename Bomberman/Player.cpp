@@ -200,6 +200,7 @@ namespace Game {
 		moving = false;
 		moved = false;
 		dyingTimer = 0;
+		dyingAnimation.reset();
 	}
 
 }
