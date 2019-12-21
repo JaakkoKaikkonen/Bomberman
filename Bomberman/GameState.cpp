@@ -78,7 +78,7 @@ namespace Game {
 					}
 				}
 
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) || sf::Joystick::isButtonPressed(0, 2)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Joystick::isButtonPressed(0, 2)) {
 					if (player1.punchPowerUp) {
 						player1.punch();
 						this->punchBomb(player1);
@@ -92,14 +92,16 @@ namespace Game {
 					}
 				}
 
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Joystick::isButtonPressed(0, 1)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Joystick::isButtonPressed(0, 2)) {
 					if (player1.kickPowerUp) {
+						player1.punch();
 						this->kickBomb(player1);
 					}
 				}
 
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) || sf::Joystick::isButtonPressed(1, 1)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Joystick::isButtonPressed(1, 2)) {
 					if (player2.kickPowerUp) {
+						player2.punch();
 						this->kickBomb(player2);
 					}
 				}

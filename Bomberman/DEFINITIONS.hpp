@@ -102,7 +102,7 @@ enum class PowerUpName { None, Fire, Bomb, Speed, Punch, Kick };
 #define BOMBERMAN_1_WALK_LEFT_3 sf::IntRect(35, 26, 16, 24)
 
 #define BOMBERMAN_1_PUNCH_DOWN sf::IntRect(51, 85, 16, 24)
-#define BOMBERMAN_1_PUNCH_UP sf::IntRect(71, 85, 16, 25)
+#define BOMBERMAN_1_PUNCH_UP sf::IntRect(71, 85, 16, 24)
 #define BOMBERMAN_1_PUNCH_RIGHT sf::IntRect(92, 85, 16, 24)
 #define BOMBERMAN_1_PUNCH_LEFT sf::IntRect(112, 85, 16, 24)
 
@@ -131,7 +131,7 @@ enum class PowerUpName { None, Fire, Bomb, Speed, Punch, Kick };
 #define BOMBERMAN_2_WALK_LEFT_3 sf::IntRect(191, 26, 16, 24)
 
 #define BOMBERMAN_2_PUNCH_DOWN sf::IntRect(206, 85, 16, 24)
-#define BOMBERMAN_2_PUNCH_UP sf::IntRect(226, 85, 16, 25)
+#define BOMBERMAN_2_PUNCH_UP sf::IntRect(226, 85, 16, 24)
 #define BOMBERMAN_2_PUNCH_RIGHT sf::IntRect(247, 85, 16, 24)
 #define BOMBERMAN_2_PUNCH_LEFT sf::IntRect(267, 85, 16, 24)
 
