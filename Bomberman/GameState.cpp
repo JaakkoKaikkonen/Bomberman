@@ -120,9 +120,6 @@ namespace Game {
 		}
 
 
-		/*std::cout << "Joystick 0 connected: " << sf::Joystick::isConnected(0) << std::endl;
-		std::cout << "Joystick 1 connected: " << sf::Joystick::isConnected(1) << std::endl;
-		std::cout << sf::Joystick::getButtonCount(0) << std::endl;*/
 
 		if (sf::Joystick::isConnected(0) && !player1Connected) {
 			player1Connected = true;
