@@ -46,6 +46,8 @@ namespace Game {
 		int lifeTime = 120;
 
 		bool moving = false;
+
+		bool hitByExplosion = false;
 		
 
 	private:
@@ -85,8 +87,6 @@ namespace Game {
 		int blastRadius;
 
 		int explosionDelayAfterHitByExplosion = 5;
-
-		bool hitByExplosion = false;
 
 
 		float bombMoveSpeed = 7.0f;

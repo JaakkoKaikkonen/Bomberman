@@ -107,11 +107,13 @@ namespace Game {
 
 			for (int length = 1; length <= blastRadius; length++) {
 
-				if (!upHit && !hitByExplosion) {
+				if (!upHit) {
 					for (int i = 0; i < bombs.size(); i++) {
 						if (sf::Vector2i(bombs[i]->getPosition().x / TILESIZE, bombs[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y - length)) {
-							hitByExplosion = true;
-							bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
+							if (!bombs[i]->hitByExplosion) {
+								bombs[i]->hitByExplosion = true;
+								bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
+							}
 							upHit = true;
 							break;
 						}
@@ -146,11 +148,13 @@ namespace Game {
 					}
 				}
 
-				if (!DownHit && !hitByExplosion) {
+				if (!DownHit) {
 					for (int i = 0; i < bombs.size(); i++) {
 						if (sf::Vector2i(bombs[i]->getPosition().x / TILESIZE, bombs[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y + length)) {
-							hitByExplosion = true;
-							bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
+							if (!bombs[i]->hitByExplosion) {
+								bombs[i]->hitByExplosion = true;
+								bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
+							}
 							DownHit = true;
 							break;
 						}
@@ -185,11 +189,13 @@ namespace Game {
 					}
 				}
 
-				if (!RightHit && !hitByExplosion) {
+				if (!RightHit) {
 					for (int i = 0; i < bombs.size(); i++) {
 						if (sf::Vector2i(bombs[i]->getPosition().x / TILESIZE, bombs[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x + length, normalizedBombPos.y)) {
-							hitByExplosion = true;
-							bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
+							if (!bombs[i]->hitByExplosion) {
+								bombs[i]->hitByExplosion = true;
+								bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
+							}
 							RightHit = true;
 							break;
 						}
@@ -224,11 +230,13 @@ namespace Game {
 					}
 				}
 
-				if (!LeftHit && !hitByExplosion) {
+				if (!LeftHit) {
 					for (int i = 0; i < bombs.size(); i++) {
 						if (sf::Vector2i(bombs[i]->getPosition().x / TILESIZE, bombs[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x - length, normalizedBombPos.y)) {
-							hitByExplosion = true;
-							bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
+							if (!bombs[i]->hitByExplosion) {
+								bombs[i]->hitByExplosion = true;
+								bombs[i]->lifeTime = explosionDelayAfterHitByExplosion;
+							}
 							LeftHit = true;
 							break;
 						}
