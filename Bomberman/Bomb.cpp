@@ -81,17 +81,28 @@ namespace Game {
 
 	void Bomb::explode(int gameField[GAMEFIELD_WIDTH][GAMEFIELD_HEIGHT], std::vector<BrickTile*>& brickTiles, std::vector<PowerUp*>& powerUps, std::vector<Bomb*>& bombs) {
 		
-		if (!moving) {
+		sf::Vector2i normalizedBombPos = sf::Vector2i(bomb.getPosition() / (float)TILESIZE);
+
+		if (gameField[normalizedBombPos.x][normalizedBombPos.y] == 0) {
 
 			player.bombCount--;
 
-			sf::Vector2i normalizedBombPos = sf::Vector2i(bomb.getPosition() / (float)TILESIZE);
+
+			if (moving) {
+				bomb.setPosition(sf::Vector2f(normalizedBombPos * TILESIZE));
+			}
 
 			//If bomb lands on powerUp burn powerUp
 			for (int i = 0; i < powerUps.size(); i++) {
 				if (sf::Vector2i(powerUps[i]->getPosition().x / TILESIZE, powerUps[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y)) {
 					powerUps[i]->burn();
 					break;
+				}
+			}
+			//If bomb lands on bomb
+			for (int i = 0; i < bombs.size(); i++) {
+				if (sf::Vector2i(bombs[i]->getPosition().x / TILESIZE, bombs[i]->getPosition().y / TILESIZE) == sf::Vector2i(normalizedBombPos.x, normalizedBombPos.y)) {
+					bombs[i]->lifeTime = 0;
 				}
 			}
 
