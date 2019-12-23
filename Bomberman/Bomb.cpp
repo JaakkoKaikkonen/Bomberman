@@ -83,8 +83,6 @@ namespace Game {
 		
 		if (!moving) {
 
-			//std::cout << "Explode" << std::endl;
-
 			player.bombCount--;
 
 			sf::Vector2i normalizedBombPos = sf::Vector2i(bomb.getPosition() / (float)TILESIZE);
