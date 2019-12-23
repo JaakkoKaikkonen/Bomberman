@@ -95,9 +95,9 @@ enum class PowerUpName { None, Fire, Bomb, Speed, Punch, Kick };
 
 #define BOMBERMAN_1_WALK_RIGHT_1 sf::IntRect(106, 29, 16, 24)
 #define BOMBERMAN_1_WALK_RIGHT_2 sf::IntRect(122, 29, 16, 24)
-#define BOMBERMAN_1_WALK_RIGHT_3 sf::IntRect(138, 29, 16, 24)
+#define BOMBERMAN_1_WALK_RIGHT_3 sf::IntRect(139, 29, 16, 24)
 
-#define BOMBERMAN_1_WALK_LEFT_1 sf::IntRect(3, 26, 16, 24)
+#define BOMBERMAN_1_WALK_LEFT_1 sf::IntRect(2, 26, 16, 24)
 #define BOMBERMAN_1_WALK_LEFT_2 sf::IntRect(19, 26, 16, 24)
 #define BOMBERMAN_1_WALK_LEFT_3 sf::IntRect(35, 26, 16, 24)
 
@@ -124,9 +124,9 @@ enum class PowerUpName { None, Fire, Bomb, Speed, Punch, Kick };
 
 #define BOMBERMAN_2_WALK_RIGHT_1 sf::IntRect(261, 29, 16, 24)
 #define BOMBERMAN_2_WALK_RIGHT_2 sf::IntRect(277, 29, 16, 24)
-#define BOMBERMAN_2_WALK_RIGHT_3 sf::IntRect(293, 29, 16, 24)
+#define BOMBERMAN_2_WALK_RIGHT_3 sf::IntRect(294, 29, 16, 24)
 
-#define BOMBERMAN_2_WALK_LEFT_1 sf::IntRect(158, 26, 16, 24)
+#define BOMBERMAN_2_WALK_LEFT_1 sf::IntRect(157, 26, 16, 24)
 #define BOMBERMAN_2_WALK_LEFT_2 sf::IntRect(174, 26, 16, 24)
 #define BOMBERMAN_2_WALK_LEFT_3 sf::IntRect(191, 26, 16, 24)
 
@@ -141,6 +141,64 @@ enum class PowerUpName { None, Fire, Bomb, Speed, Punch, Kick };
 #define BOMBERMAN_2_DEAD_4 sf::IntRect(238, 57, 16, 24)
 #define BOMBERMAN_2_DEAD_5 sf::IntRect(255, 57, 16, 24)
 #define BOMBERMAN_2_DEAD_6 sf::IntRect(273, 57, 16, 24)
+
+
+#define BOMBERMAN_3_WALK_DOWN_1 sf::IntRect(56, 141, 16, 24)
+#define BOMBERMAN_3_WALK_DOWN_2 sf::IntRect(72, 141, 16, 24)
+#define BOMBERMAN_3_WALK_DOWN_3 sf::IntRect(88, 141, 16, 24)
+
+#define BOMBERMAN_3_WALK_UP_1 sf::IntRect(57, 115, 16, 24)
+#define BOMBERMAN_3_WALK_UP_2 sf::IntRect(73, 115, 16, 24)
+#define BOMBERMAN_3_WALK_UP_3 sf::IntRect(89, 115, 16, 24)
+
+#define BOMBERMAN_3_WALK_RIGHT_1 sf::IntRect(106, 142, 16, 24)
+#define BOMBERMAN_3_WALK_RIGHT_2 sf::IntRect(122, 142, 16, 24)
+#define BOMBERMAN_3_WALK_RIGHT_3 sf::IntRect(139, 142, 16, 24)
+
+#define BOMBERMAN_3_WALK_LEFT_1 sf::IntRect(2, 139, 16, 24)
+#define BOMBERMAN_3_WALK_LEFT_2 sf::IntRect(19, 139, 16, 24)
+#define BOMBERMAN_3_WALK_LEFT_3 sf::IntRect(36, 139, 16, 24)
+
+#define BOMBERMAN_3_PUNCH_DOWN sf::IntRect(51, 198, 16, 24)
+#define BOMBERMAN_3_PUNCH_UP sf::IntRect(71, 198, 16, 24)
+#define BOMBERMAN_3_PUNCH_RIGHT sf::IntRect(92, 198, 16, 24)
+#define BOMBERMAN_3_PUNCH_LEFT sf::IntRect(111, 198, 16, 24)
+
+#define BOMBERMAN_3_DEAD_1 sf::IntRect(30, 170, 16, 24)
+#define BOMBERMAN_3_DEAD_2 sf::IntRect(49, 170, 16, 24)
+#define BOMBERMAN_3_DEAD_3 sf::IntRect(66, 170, 16, 24)
+#define BOMBERMAN_3_DEAD_4 sf::IntRect(83, 170, 16, 24)
+#define BOMBERMAN_3_DEAD_5 sf::IntRect(100, 170, 16, 24)
+#define BOMBERMAN_3_DEAD_6 sf::IntRect(118, 170, 16, 24)
+
+
+#define BOMBERMAN_4_WALK_DOWN_1 sf::IntRect(211, 141, 16, 24)
+#define BOMBERMAN_4_WALK_DOWN_2 sf::IntRect(227, 141, 16, 24)
+#define BOMBERMAN_4_WALK_DOWN_3 sf::IntRect(243, 141, 16, 24)
+
+#define BOMBERMAN_4_WALK_UP_1 sf::IntRect(212, 115, 16, 24)
+#define BOMBERMAN_4_WALK_UP_2 sf::IntRect(228, 115, 16, 24)
+#define BOMBERMAN_4_WALK_UP_3 sf::IntRect(244, 115, 16, 24)
+
+#define BOMBERMAN_4_WALK_RIGHT_1 sf::IntRect(261, 142, 16, 24)
+#define BOMBERMAN_4_WALK_RIGHT_2 sf::IntRect(277, 142, 16, 24)
+#define BOMBERMAN_4_WALK_RIGHT_3 sf::IntRect(294, 142, 16, 24)
+
+#define BOMBERMAN_4_WALK_LEFT_1 sf::IntRect(157, 139, 16, 24)
+#define BOMBERMAN_4_WALK_LEFT_2 sf::IntRect(174, 139, 16, 24)
+#define BOMBERMAN_4_WALK_LEFT_3 sf::IntRect(191, 139, 16, 24)
+
+#define BOMBERMAN_4_PUNCH_DOWN sf::IntRect(206, 198, 16, 24)
+#define BOMBERMAN_4_PUNCH_UP sf::IntRect(226, 198, 16, 24)
+#define BOMBERMAN_4_PUNCH_RIGHT sf::IntRect(247, 198, 16, 24)
+#define BOMBERMAN_4_PUNCH_LEFT sf::IntRect(267, 198, 16, 24)
+
+#define BOMBERMAN_4_DEAD_1 sf::IntRect(185, 170, 16, 24)
+#define BOMBERMAN_4_DEAD_2 sf::IntRect(204, 170, 16, 24)
+#define BOMBERMAN_4_DEAD_3 sf::IntRect(221, 170, 16, 24)
+#define BOMBERMAN_4_DEAD_4 sf::IntRect(238, 170, 16, 24)
+#define BOMBERMAN_4_DEAD_5 sf::IntRect(255, 170, 16, 24)
+#define BOMBERMAN_4_DEAD_6 sf::IntRect(273, 170, 16, 24)
 
 
 

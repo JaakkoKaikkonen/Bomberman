@@ -47,9 +47,14 @@ namespace Game {
 
 		std::vector<PowerUp*> powerUps;
 
-		Player player1;
+		std::vector<Player*> players;
 
-		Player player2;
+		bool player1Connected, player2Connected, player3Connected, player4Connected;
+
+		const sf::Vector2f player1StartPosition;
+		const sf::Vector2f player2StartPosition;
+		const sf::Vector2f player3StartPosition;
+		const sf::Vector2f player4StartPosition;
 
 		std::vector<Bomb*> bombs;
 

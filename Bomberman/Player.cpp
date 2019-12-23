@@ -83,7 +83,76 @@ namespace Game {
 			punchRightFrame = BOMBERMAN_2_PUNCH_RIGHT;
 			punchLeftFrame = BOMBERMAN_2_PUNCH_LEFT;
 
+		} else if (playerNumber == 3) {
+
+			walkingDownAnimationFrames[0] = BOMBERMAN_3_WALK_DOWN_2;
+			walkingDownAnimationFrames[1] = BOMBERMAN_3_WALK_DOWN_1;
+			walkingDownAnimationFrames[2] = BOMBERMAN_3_WALK_DOWN_2;
+			walkingDownAnimationFrames[3] = BOMBERMAN_3_WALK_DOWN_3;
+
+			walkingUpAnimationFrames[0] = BOMBERMAN_3_WALK_UP_2;
+			walkingUpAnimationFrames[1] = BOMBERMAN_3_WALK_UP_1;
+			walkingUpAnimationFrames[2] = BOMBERMAN_3_WALK_UP_2;
+			walkingUpAnimationFrames[3] = BOMBERMAN_3_WALK_UP_3;
+
+			walkingRightAnimationFrames[0] = BOMBERMAN_3_WALK_RIGHT_1;
+			walkingRightAnimationFrames[1] = BOMBERMAN_3_WALK_RIGHT_2;
+			walkingRightAnimationFrames[2] = BOMBERMAN_3_WALK_RIGHT_1;
+			walkingRightAnimationFrames[3] = BOMBERMAN_3_WALK_RIGHT_3;
+
+			walkingLeftAnimationFrames[0] = BOMBERMAN_3_WALK_LEFT_1;
+			walkingLeftAnimationFrames[1] = BOMBERMAN_3_WALK_LEFT_2;
+			walkingLeftAnimationFrames[2] = BOMBERMAN_3_WALK_LEFT_1;
+			walkingLeftAnimationFrames[3] = BOMBERMAN_3_WALK_LEFT_3;
+
+			dyingAnimationFrames[0] = BOMBERMAN_3_DEAD_1;
+			dyingAnimationFrames[1] = BOMBERMAN_3_DEAD_2;
+			dyingAnimationFrames[2] = BOMBERMAN_3_DEAD_3;
+			dyingAnimationFrames[3] = BOMBERMAN_3_DEAD_4;
+			dyingAnimationFrames[4] = BOMBERMAN_3_DEAD_5;
+			dyingAnimationFrames[5] = BOMBERMAN_3_DEAD_6;
+
+			punchUpFrame = BOMBERMAN_3_PUNCH_UP;
+			punchDownFrame = BOMBERMAN_3_PUNCH_DOWN;
+			punchRightFrame = BOMBERMAN_3_PUNCH_RIGHT;
+			punchLeftFrame = BOMBERMAN_3_PUNCH_LEFT;
+
+		} else if (playerNumber == 4) {
+
+			walkingDownAnimationFrames[0] = BOMBERMAN_4_WALK_DOWN_2;
+			walkingDownAnimationFrames[1] = BOMBERMAN_4_WALK_DOWN_1;
+			walkingDownAnimationFrames[2] = BOMBERMAN_4_WALK_DOWN_2;
+			walkingDownAnimationFrames[3] = BOMBERMAN_4_WALK_DOWN_3;
+
+			walkingUpAnimationFrames[0] = BOMBERMAN_4_WALK_UP_2;
+			walkingUpAnimationFrames[1] = BOMBERMAN_4_WALK_UP_1;
+			walkingUpAnimationFrames[2] = BOMBERMAN_4_WALK_UP_2;
+			walkingUpAnimationFrames[3] = BOMBERMAN_4_WALK_UP_3;
+
+			walkingRightAnimationFrames[0] = BOMBERMAN_4_WALK_RIGHT_1;
+			walkingRightAnimationFrames[1] = BOMBERMAN_4_WALK_RIGHT_2;
+			walkingRightAnimationFrames[2] = BOMBERMAN_4_WALK_RIGHT_1;
+			walkingRightAnimationFrames[3] = BOMBERMAN_4_WALK_RIGHT_3;
+
+			walkingLeftAnimationFrames[0] = BOMBERMAN_4_WALK_LEFT_1;
+			walkingLeftAnimationFrames[1] = BOMBERMAN_4_WALK_LEFT_2;
+			walkingLeftAnimationFrames[2] = BOMBERMAN_4_WALK_LEFT_1;
+			walkingLeftAnimationFrames[3] = BOMBERMAN_3_WALK_LEFT_3;
+
+			dyingAnimationFrames[0] = BOMBERMAN_4_DEAD_1;
+			dyingAnimationFrames[1] = BOMBERMAN_4_DEAD_2;
+			dyingAnimationFrames[2] = BOMBERMAN_4_DEAD_3;
+			dyingAnimationFrames[3] = BOMBERMAN_4_DEAD_4;
+			dyingAnimationFrames[4] = BOMBERMAN_4_DEAD_5;
+			dyingAnimationFrames[5] = BOMBERMAN_4_DEAD_6;
+
+			punchUpFrame = BOMBERMAN_4_PUNCH_UP;
+			punchDownFrame = BOMBERMAN_4_PUNCH_DOWN;
+			punchRightFrame = BOMBERMAN_4_PUNCH_RIGHT;
+			punchLeftFrame = BOMBERMAN_4_PUNCH_LEFT;
+
 		}
+
 	}
 
 

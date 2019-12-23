@@ -30,7 +30,7 @@ namespace Game {
 
 		sf::Vector2f getPosition() { return player.getPosition(); }
 
-		void setPosition(float x, float y) { player.setPosition(x, y); }
+		void setPosition(sf::Vector2f position) { player.setPosition(position); }
 
 		void reset();
 

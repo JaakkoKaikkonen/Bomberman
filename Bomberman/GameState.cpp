@@ -12,8 +12,10 @@ namespace Game {
 		  emptyTile(data->assets.getTexture("Tiles"), EMPTY_TILE),
 		  emptyBelowTile(data->assets.getTexture("Tiles"), EMPTY_BELOW_TILE),
 		  blockTile(data->assets.getTexture("Tiles"), BLOCK_TILE), 
-		  player1(data, sf::Vector2f(50.0f + 5.0f, 50.0f), 1),
-		  player2(data, sf::Vector2f(SCREEN_WIDTH - TILESIZE * 2 + 5.0f, 50.0f), 2),
+		  player1StartPosition(50.0f + 5.0f, 50.0f),
+		  player2StartPosition(SCREEN_WIDTH - TILESIZE * 2 + 5.0f, 50.0f),
+		  player3StartPosition(50.0f + 5.0f, SCREEN_HEIGHT - TILESIZE * 2.5),
+		  player4StartPosition(SCREEN_WIDTH - TILESIZE * 2 + 5.0f, SCREEN_HEIGHT - TILESIZE * 2.5),
 		  gameOverText("GAME OVER", data->assets.getFont("Font"), 32)
 	{	
 		gameOverText.setOrigin(gameOverText.getGlobalBounds().width / 2, gameOverText.getGlobalBounds().height / 2);
@@ -45,100 +47,69 @@ namespace Game {
 
 			if (event.type == sf::Event::KeyPressed || event.type == sf::Event::EventType::JoystickButtonPressed) {
 
-				if (!player1.dying && player1.bombCount < player1.bombLimit) {
-					if (event.key.code == sf::Keyboard::Space || sf::Joystick::isButtonPressed(0, 0)) {
-						sf::Vector2i normalizedbombPos = sf::Vector2i(player1.getPosition() + sf::Vector2f(player1.getSprite().getGlobalBounds().width / 2, player1.getSprite().getGlobalBounds().height / 2 + 5.0f)) / TILESIZE;
-						bool overlap = false;
-						for (int i = 0; i < bombs.size(); i++) {
-							if (bombs[i]->normalizedPos == normalizedbombPos) {
-								overlap = true;
-								break;
+				for (int i = 0; i < players.size(); i++) {
+					if (!players[i]->dying && players[i]->bombCount < players[i]->bombLimit) {
+						if ((i == 0 && event.key.code == sf::Keyboard::Space) ||
+							(i == 1 && event.key.code == sf::Keyboard::RControl) ||
+							sf::Joystick::isButtonPressed(i, 0)) {
+
+							sf::Vector2i normalizedbombPos = sf::Vector2i(players[i]->getPosition() + sf::Vector2f(players[i]->getSprite().getGlobalBounds().width / 2, players[i]->getSprite().getGlobalBounds().height / 2 + 5.0f)) / TILESIZE;
+							bool overlap = false;
+							for (int j = 0; j < bombs.size(); j++) {
+								if (bombs[j]->normalizedPos == normalizedbombPos) {
+									overlap = true;
+									break;
+								}
 							}
-						}
-						if (!overlap) {
-							bombs.emplace_back(new Bomb(data, player1, normalizedbombPos, player1.blastRadius));
-							player1.bombCount++;
-						}
-					}
-				}
-				if (!player2.dying && player2.bombCount < player2.bombLimit) {
-					if (event.key.code == sf::Keyboard::RControl || sf::Joystick::isButtonPressed(1, 0)) {
-						sf::Vector2i normalizedbombPos = sf::Vector2i(player2.getPosition() + sf::Vector2f(player2.getSprite().getGlobalBounds().width / 2, player2.getSprite().getGlobalBounds().height / 2 + 5.0f)) / TILESIZE;
-						bool overlap = false;
-						for (int i = 0; i < bombs.size(); i++) {
-							if (bombs[i]->normalizedPos == normalizedbombPos) {
-								overlap = true;
-								break;
+							if (!overlap) {
+								bombs.emplace_back(new Bomb(data, *players[i], normalizedbombPos, players[i]->blastRadius));
+								players[i]->bombCount++;
 							}
-						}
-						if (!overlap) {
-							bombs.emplace_back(new Bomb(data, player2, normalizedbombPos, player2.blastRadius));
-							player2.bombCount++;
+
 						}
 					}
-				}
 
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Joystick::isButtonPressed(0, 2)) {
-					if (player1.punchPowerUp) {
-						player1.punch();
-						this->punchBomb(player1);
-					}
-				}
+					if ((i == 0 && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) || 
+						(i == 1 && sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) || 
+						sf::Joystick::isButtonPressed(i, 2)) {
 
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Joystick::isButtonPressed(1, 2)) {
-					if (player2.punchPowerUp) {
-						player2.punch();
-						this->punchBomb(player2);
-					}
-				}
+						if (players[i]->punchPowerUp) {
+							players[i]->punch();
+							this->punchBomb(*players[i]);
+						}
 
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Joystick::isButtonPressed(0, 2)) {
-					if (player1.kickPowerUp) {
-						player1.punch();
-						this->kickBomb(player1);
-					}
-				}
+						if (players[i]->kickPowerUp) {
+							players[i]->punch();
+							this->kickBomb(*players[i]);
+						}
 
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) || sf::Joystick::isButtonPressed(1, 2)) {
-					if (player2.kickPowerUp) {
-						player2.punch();
-						this->kickBomb(player2);
 					}
+
 				}
 
 			}
 		}
 
 
-		float C1positionX = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
-		float C1positionY = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
+		for (int i = 0; i < players.size(); i++) {
+
+			float analogStickPositionX = sf::Joystick::getAxisPosition(i, sf::Joystick::X);
+			float analogStickPositionY = sf::Joystick::getAxisPosition(i, sf::Joystick::Y);
 		
-		if (!player1.dying) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || C1positionY < -80) {
-				player1.move(Dir::Up);
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || C1positionY > 80) {
-				player1.move(Dir::Down);
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || C1positionX > 80) {
-				player1.move(Dir::Right);
-			} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A) || C1positionX < -80){
-				player1.move(Dir::Left);
+			if (!players[i]->dying) {
+				if ((sf::Keyboard::isKeyPressed(sf::Keyboard::W) && i == 0) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && i == 1) || analogStickPositionY < -80) {
+					players[i]->move(Dir::Up);
+				} else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::S) && i == 0) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && i == 1) || analogStickPositionY > 80) {
+					players[i]->move(Dir::Down);
+				} else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::D) && i == 0) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && i == 1) || analogStickPositionX > 80) {
+					players[i]->move(Dir::Right);
+				} else if((sf::Keyboard::isKeyPressed(sf::Keyboard::A) && i == 0) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && i == 1) || analogStickPositionX < -80){
+					players[i]->move(Dir::Left);
+				}
 			}
+
 		}
 
-		float C2positionX = sf::Joystick::getAxisPosition(1, sf::Joystick::X);
-		float C2positionY = sf::Joystick::getAxisPosition(1, sf::Joystick::Y);
-
-		if (!player2.dying) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || C2positionY < -80) {
-				player2.move(Dir::Up);
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || C2positionY > 80) {
-				player2.move(Dir::Down);
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || C2positionX > 80) {
-				player2.move(Dir::Right);
-			} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || C2positionX < -80){
-				player2.move(Dir::Left);
-			}
-		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) || sf::Joystick::isButtonPressed(0, 7)) {
 			this->reset();
@@ -153,37 +124,57 @@ namespace Game {
 		std::cout << "Joystick 1 connected: " << sf::Joystick::isConnected(1) << std::endl;
 		std::cout << sf::Joystick::getButtonCount(0) << std::endl;*/
 
+		if (sf::Joystick::isConnected(0) && !player1Connected) {
+			player1Connected = true;
+			players.emplace_back(new Player(data, player1StartPosition, 1));
+		}
+		if (sf::Joystick::isConnected(1) && !player2Connected) {
+			player2Connected = true;
+			players.emplace_back(new Player(data, player2StartPosition, 2));
+		}
+		if (sf::Joystick::isConnected(2) && !player3Connected) {
+			player3Connected = true;
+			players.emplace_back(new Player(data, player3StartPosition, 3));
+		}
+		if (sf::Joystick::isConnected(3) && !player4Connected) {
+			player4Connected = true;
+			players.emplace_back(new Player(data, player4StartPosition, 4));
+		}
+
+
 	}
 
 	void GameState::update() {
 
 		//Update players
-		player1.update();
+		int playersDeadCounter = 0;
+		for (int i = 0; i < players.size(); i++) {
 
-		if (player1.dead) {
-			gameOver = true;
-		}
+			players[i]->update();
 
-		player2.update();
+			
+			if (players[i]->dead) {
+				playersDeadCounter++;
+			}
 
-		if (player2.dead) {
-			gameOver = true;
-		}
-
-		//Player Wall Collision
-		for (int i = 0; i < GAMEFIELD_WIDTH; i++) {
-			for (int j = 0; j < GAMEFIELD_HEIGHT; j++) {
-				if (gameField[i][j] != 0) {
-					blockTile.setPosition(i * TILESIZE, j * TILESIZE);
-					if (Collision::bomberManCollision(blockTile, player1.getSprite(), 0.5f, 0.05f, 0.2f, 0.2f)) {
-						player1.goToPreviousPosition();
-					}
-					if (Collision::bomberManCollision(blockTile, player2.getSprite(), 0.5f, 0.05f, 0.2f, 0.2f)) {
-						player2.goToPreviousPosition();
+			//Player Wall Collision
+			for (int j = 0; j < GAMEFIELD_WIDTH; j++) {
+				for (int k = 0; k < GAMEFIELD_HEIGHT; k++) {
+					if (gameField[j][k] != 0) {
+						blockTile.setPosition(j * TILESIZE, k * TILESIZE);
+						if (Collision::bomberManCollision(blockTile, players[i]->getSprite(), 0.5f, 0.05f, 0.2f, 0.2f)) {
+							players[i]->goToPreviousPosition();
+						}
 					}
 				}
 			}
+
 		}
+
+		if (playersDeadCounter >= players.size() - 1 && players.size() > 1) {
+			gameOver = true;
+		}
+
 
 		//Bombs
 		for (int i = bombs.size() - 1; i >= 0 ; i--) {
@@ -193,13 +184,13 @@ namespace Game {
 				bombs[i]->explode(gameField, brickTiles, powerUps, bombs);
 			}
 
-			if (bombs[i]->hits(player1)) {
-				player1.kill();
+			
+			for (int j = 0; j < players.size(); j++) {
+				if (bombs[i]->hits(*players[j])) {
+					players[j]->kill();
+				}
 			}
 
-			if (bombs[i]->hits(player2)) {
-				player2.kill();
-			}
 
 			if (bombs[i]->explosionTimer <= 0 || bombs[i]->outOfScreen()) {
 				bombs[i] = bombs[bombs.size() - 1];
@@ -210,10 +201,15 @@ namespace Game {
 
 		//PowerUps
 		for (int i = powerUps.size() - 1; i >= 0; i--) {
-			if (powerUps[i]->burned() || powerUps[i]->collides(player1) || powerUps[i]->collides(player2)) {
-				powerUps[i] = powerUps[powerUps.size() - 1];
-				powerUps.pop_back();
+
+			for (int j = 0; j < players.size(); j++) {
+				if (powerUps[i]->collides(*players[j]) || powerUps[i]->burned()) {
+					powerUps[i] = powerUps[powerUps.size() - 1];
+					powerUps.pop_back();
+					break;
+				}
 			}
+
 		}
 
 		//BrickTiles
@@ -264,14 +260,18 @@ namespace Game {
 			bombs[i]->draw();
 		}
 
-
-		if (player2.dead) {
-			player2.draw();
-			player1.draw();
-		} else {
-			player1.draw();
-			player2.draw();
+		//Draw dead player under alive players
+		for (int i = 0; i < players.size(); i++) {
+			if (players[i]->dead) {
+				players[i]->draw();
+			}
 		}
+		for (int i = 0; i < players.size(); i++) {
+			if (!players[i]->dead) {
+				players[i]->draw();
+			}
+		}
+
 
 		if (gameOver) {
 			data->window.draw(gameOverText);
@@ -483,10 +483,19 @@ namespace Game {
 
 
 	void GameState::reset() {
-		player1.reset();
-		player2.reset();
-		player1.setPosition(50.0f + 5.0f, 50.0f);
-		player2.setPosition(SCREEN_WIDTH - TILESIZE * 2 + 5.0f, 50.0f);
+		for (int i = 0; i < players.size(); i++) {
+			players[i]->reset();
+			if (i == 0) {
+				players[i]->setPosition(player1StartPosition);
+			} else if (i == 1) {
+				players[i]->setPosition(player2StartPosition);
+			} else if (i == 2) {
+				players[i]->setPosition(player3StartPosition);
+			} else if (i == 3) {
+				players[i]->setPosition(player4StartPosition);
+			}
+		}
+
 		bombs.clear();
 		powerUps.clear();
 		
