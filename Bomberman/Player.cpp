@@ -137,7 +137,7 @@ namespace Game {
 			walkingLeftAnimationFrames[0] = BOMBERMAN_4_WALK_LEFT_1;
 			walkingLeftAnimationFrames[1] = BOMBERMAN_4_WALK_LEFT_2;
 			walkingLeftAnimationFrames[2] = BOMBERMAN_4_WALK_LEFT_1;
-			walkingLeftAnimationFrames[3] = BOMBERMAN_3_WALK_LEFT_3;
+			walkingLeftAnimationFrames[3] = BOMBERMAN_4_WALK_LEFT_3;
 
 			dyingAnimationFrames[0] = BOMBERMAN_4_DEAD_1;
 			dyingAnimationFrames[1] = BOMBERMAN_4_DEAD_2;
