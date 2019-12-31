@@ -32,6 +32,10 @@ namespace Game {
 		//Spawn 2 players
 		players.emplace_back(new Player(data, playerStartPositions[0], 1));
 		players.emplace_back(new Player(data, playerStartPositions[1], 2));
+
+		//Start music
+		data->music.setLoop(true);
+		data->music.play();
 	}
 
 
@@ -179,15 +183,14 @@ namespace Game {
 
 			if (bombs[i]->shouldExplode) {
 				bombs[i]->explode(gameField, brickTiles, powerUps, bombs);
+				data->assets.getSound("Bomb").play();
 			}
 
-			
 			for (int j = 0; j < players.size(); j++) {
 				if (bombs[i]->hits(*players[j])) {
 					players[j]->kill();
 				}
 			}
-
 
 			if (bombs[i]->explosionTimer <= 0 || bombs[i]->outOfScreen()) {
 				bombs[i] = bombs[bombs.size() - 1];
@@ -203,6 +206,7 @@ namespace Game {
 				if (powerUps[i]->collides(*players[j]) || powerUps[i]->burned()) {
 					powerUps[i] = powerUps[powerUps.size() - 1];
 					powerUps.pop_back();
+					data->assets.getSound("PowerUp").play();
 					break;
 				}
 			}

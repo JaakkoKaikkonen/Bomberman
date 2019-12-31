@@ -29,6 +29,10 @@ namespace Game {
 		data->assets.loadTexture("PowerUps", POWER_UP_SPRITES_FILEPATH);
 
 		//Sounds
+		data->assets.loadSound("Bomb", BOMB_SOUND_FILEPATH);
+		data->assets.loadSound("PowerUp", POWER_UP_SOUND_FILEPATH);
+
+		data->music.openFromFile(MUSIC_FILEPATH);
 
 		//Fonts
 		data->assets.loadFont("Font", FONT_FILEPATH);

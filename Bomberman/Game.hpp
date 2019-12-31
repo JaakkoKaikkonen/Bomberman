@@ -12,6 +12,7 @@ namespace Game {
 	struct GameData {
 		sf::RenderWindow window;
 		AssetManager assets;
+		sf::Music music;
 
 		State* state = nullptr;
 		State* newState = nullptr;

@@ -61,8 +61,6 @@ namespace Game {
 
 		int gameField[GAMEFIELD_WIDTH][GAMEFIELD_HEIGHT];
 
-		enum class ControllerButton { A, B, X, Y, LB, RB, View, Menu, Left_Stick_Down, Right_Stick_Down };
-
 	};
 
 }

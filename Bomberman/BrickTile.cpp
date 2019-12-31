@@ -19,9 +19,9 @@ namespace Game {
 			powerUp = PowerUpName::Bomb;
 		} else if (randNum > 0.7f) {
 			powerUp = PowerUpName::Speed;
-		} else if (randNum > 0.6f) {
+		} else if (randNum > 0.65f) {
 			powerUp = PowerUpName::Punch;
-		} else if (randNum > 0.5f) {
+		} else if (randNum > 0.6f) {
 			powerUp = PowerUpName::Kick;
 		}
 	}

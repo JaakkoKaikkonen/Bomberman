@@ -16,10 +16,17 @@
 #define PLAYER_SPRITES_FILEPATH "Resources/Images/bombermanSprites.png"
 #define POWER_UP_SPRITES_FILEPATH "Resources/Images/items.png"
 
+#define MUSIC_FILEPATH "Resources/Sounds/bomberman_music.ogg"
+
+#define BOMB_SOUND_FILEPATH "Resources/Sounds/bomb.ogg"
+#define POWER_UP_SOUND_FILEPATH "Resources/Sounds/powerup.ogg"
+
 
 enum class Dir { Up, Down, Right, Left };
 
 enum class PowerUpName { None, Fire, Bomb, Speed, Punch, Kick };
+
+enum class ControllerButton { A, B, X, Y, LB, RB, View, Menu, Left_Stick_Down, Right_Stick_Down };
 
 
 #define BLOCK_TILE sf::IntRect(18, 0, 16, 16)
