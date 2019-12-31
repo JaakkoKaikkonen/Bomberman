@@ -75,7 +75,12 @@ namespace Game {
 
 		sf::Vector2f distance = sf::Vector2f((newPosition * TILESIZE) + sf::Vector2i(5, 5)) - bomb.getPosition();
 
-		moveAnimationPercentageStep = 1.0f / (sqrt((distance.x * distance.x) + (distance.y * distance.y)) / bombMoveSpeed);
+		if (distance.x == 0) {
+			moveAnimationPercentageStep = 1.0f / (abs(distance.y) / bombMoveSpeed);
+		} else {
+			moveAnimationPercentageStep = 1.0f / (abs(distance.x) / bombMoveSpeed);
+		}
+
 
 	}
 
@@ -294,7 +299,7 @@ namespace Game {
 	bool Bomb::hits(Player& player) {
 		for (int i = 0; i < explosionAnimationFrameList.size(); i++) {
 			explosionAnimationFrameList[i]->sprite->setPosition(explosionAnimationFrameList[i]->position);
-			if (Collision::checkSpriteCollision(*explosionAnimationFrameList[i]->sprite, 0.7f, player.getSprite(), 0.7f)) {
+			if (Collision::checkSpriteCollision(*explosionAnimationFrameList[i]->sprite, 0.6f, player.getSprite(), 0.6f)) {
 				return true;
 			}
 		}

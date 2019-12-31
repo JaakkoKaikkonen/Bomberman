@@ -12,10 +12,6 @@ namespace Game {
 		  emptyTile(data->assets.getTexture("Tiles"), EMPTY_TILE),
 		  emptyBelowTile(data->assets.getTexture("Tiles"), EMPTY_BELOW_TILE),
 		  blockTile(data->assets.getTexture("Tiles"), BLOCK_TILE), 
-		  player1StartPosition(50.0f + 5.0f, 50.0f),
-		  player2StartPosition(SCREEN_WIDTH - TILESIZE * 2 + 5.0f, 50.0f),
-		  player3StartPosition(50.0f + 5.0f, SCREEN_HEIGHT - TILESIZE * 2.5),
-		  player4StartPosition(SCREEN_WIDTH - TILESIZE * 2 + 5.0f, SCREEN_HEIGHT - TILESIZE * 2.5),
 		  gameOverText("GAME OVER", data->assets.getFont("Font"), 32)
 	{	
 		gameOverText.setOrigin(gameOverText.getGlobalBounds().width / 2, gameOverText.getGlobalBounds().height / 2);
@@ -27,6 +23,15 @@ namespace Game {
 
 		this->generateMap();
 
+		//Set player startPositions
+		playerStartPositions[0] = sf::Vector2f(50.0f + 5.0f, 50.0f);
+		playerStartPositions[1] = sf::Vector2f(SCREEN_WIDTH - TILESIZE * 2 + 5.0f, 50.0f);
+		playerStartPositions[2] = sf::Vector2f(50.0f + 5.0f, SCREEN_HEIGHT - TILESIZE * 2.5);
+		playerStartPositions[3] = sf::Vector2f(SCREEN_WIDTH - TILESIZE * 2 + 5.0f, SCREEN_HEIGHT - TILESIZE * 2.5);
+
+		//Spawn 2 players
+		players.emplace_back(new Player(data, playerStartPositions[0], 1));
+		players.emplace_back(new Player(data, playerStartPositions[1], 2));
 	}
 
 
@@ -38,12 +43,10 @@ namespace Game {
 				data->window.close();
 			}
 
-
-			if (event.type == sf::Event::EventType::JoystickButtonPressed) {
+			/*if (event.type == sf::Event::EventType::JoystickButtonPressed) {
                 std::cout << "Joystick ID : " << event.joystickButton.joystickId << std::endl;
                 std::cout << "Joystick Button : " << event.joystickButton.button << std::endl;
-			}
-
+			}*/
 
 			if (event.type == sf::Event::KeyPressed || event.type == sf::Event::EventType::JoystickButtonPressed) {
 
@@ -51,7 +54,7 @@ namespace Game {
 					if (!players[i]->dying && players[i]->bombCount < players[i]->bombLimit) {
 						if ((i == 0 && event.key.code == sf::Keyboard::Space) ||
 							(i == 1 && event.key.code == sf::Keyboard::RControl) ||
-							sf::Joystick::isButtonPressed(i, 0)) {
+							sf::Joystick::isButtonPressed(i, (unsigned int)ControllerButton::A)) {
 
 							sf::Vector2i normalizedbombPos = sf::Vector2i(players[i]->getPosition() + sf::Vector2f(players[i]->getSprite().getGlobalBounds().width / 2, players[i]->getSprite().getGlobalBounds().height / 2 + 5.0f)) / TILESIZE;
 							bool overlap = false;
@@ -71,7 +74,7 @@ namespace Game {
 
 					if ((i == 0 && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) || 
 						(i == 1 && sf::Keyboard::isKeyPressed(sf::Keyboard::RShift)) || 
-						sf::Joystick::isButtonPressed(i, 2)) {
+						sf::Joystick::isButtonPressed(i, (unsigned int)ControllerButton::X)) {
 
 						if (players[i]->punchPowerUp) {
 							players[i]->punch();
@@ -93,8 +96,13 @@ namespace Game {
 
 		for (int i = 0; i < players.size(); i++) {
 
-			float analogStickPositionX = sf::Joystick::getAxisPosition(i, sf::Joystick::X);
-			float analogStickPositionY = sf::Joystick::getAxisPosition(i, sf::Joystick::Y);
+			float analogStickPositionX = 0;
+			float analogStickPositionY = 0;
+
+			if (playersConnected[i]) {
+				analogStickPositionX = sf::Joystick::getAxisPosition(i, sf::Joystick::X);
+				analogStickPositionY = sf::Joystick::getAxisPosition(i, sf::Joystick::Y);
+			}
 		
 			if (!players[i]->dying) {
 				if ((sf::Keyboard::isKeyPressed(sf::Keyboard::W) && i == 0) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && i == 1) || analogStickPositionY < -80) {
@@ -111,7 +119,7 @@ namespace Game {
 		}
 
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) || sf::Joystick::isButtonPressed(0, 7)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) || sf::Joystick::isButtonPressed(0, (unsigned int)ControllerButton::Menu)) {
 			this->reset();
 		}
 		
@@ -121,21 +129,13 @@ namespace Game {
 
 
 
-		if (sf::Joystick::isConnected(0) && !player1Connected) {
-			player1Connected = true;
-			players.emplace_back(new Player(data, player1StartPosition, 1));
-		}
-		if (sf::Joystick::isConnected(1) && !player2Connected) {
-			player2Connected = true;
-			players.emplace_back(new Player(data, player2StartPosition, 2));
-		}
-		if (sf::Joystick::isConnected(2) && !player3Connected) {
-			player3Connected = true;
-			players.emplace_back(new Player(data, player3StartPosition, 3));
-		}
-		if (sf::Joystick::isConnected(3) && !player4Connected) {
-			player4Connected = true;
-			players.emplace_back(new Player(data, player4StartPosition, 4));
+		for (int i = 0; i < 4; i++) {
+			if (sf::Joystick::isConnected(i) && !playersConnected[i]) {
+				playersConnected[i] = true;
+				if (i >= 2) {
+					players.emplace_back(new Player(data, playerStartPositions[i], i+1));
+				}
+			}
 		}
 
 
@@ -236,8 +236,6 @@ namespace Game {
 						emptyTile.setPosition(i * TILESIZE, j * TILESIZE);
 						data->window.draw(emptyTile);
 					}
-				} else if (gameField[i][j] == 1) {
-
 				} else if (gameField[i][j] == 2) {
 					blockTile.setPosition(i * TILESIZE, j * TILESIZE);
 					data->window.draw(blockTile);
@@ -483,15 +481,7 @@ namespace Game {
 	void GameState::reset() {
 		for (int i = 0; i < players.size(); i++) {
 			players[i]->reset();
-			if (i == 0) {
-				players[i]->setPosition(player1StartPosition);
-			} else if (i == 1) {
-				players[i]->setPosition(player2StartPosition);
-			} else if (i == 2) {
-				players[i]->setPosition(player3StartPosition);
-			} else if (i == 3) {
-				players[i]->setPosition(player4StartPosition);
-			}
+			players[i]->setPosition(playerStartPositions[i]);
 		}
 
 		bombs.clear();

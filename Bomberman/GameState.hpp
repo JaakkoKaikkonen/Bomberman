@@ -49,12 +49,9 @@ namespace Game {
 
 		std::vector<Player*> players;
 
-		bool player1Connected, player2Connected, player3Connected, player4Connected;
+		bool playersConnected[4];
 
-		const sf::Vector2f player1StartPosition;
-		const sf::Vector2f player2StartPosition;
-		const sf::Vector2f player3StartPosition;
-		const sf::Vector2f player4StartPosition;
+		sf::Vector2f playerStartPositions[4];
 
 		std::vector<Bomb*> bombs;
 
@@ -63,6 +60,8 @@ namespace Game {
 		sf::Text gameOverText;
 
 		int gameField[GAMEFIELD_WIDTH][GAMEFIELD_HEIGHT];
+
+		enum class ControllerButton { A, B, X, Y, LB, RB, View, Menu, Left_Stick_Down, Right_Stick_Down };
 
 	};
 
