@@ -202,8 +202,14 @@ namespace Game {
 		//PowerUps
 		for (int i = powerUps.size() - 1; i >= 0; i--) {
 
+			if (powerUps[i]->burned()) {
+				powerUps[i] = powerUps[powerUps.size() - 1];
+				powerUps.pop_back();
+				continue;
+			}
+
 			for (int j = 0; j < players.size(); j++) {
-				if (powerUps[i]->collides(*players[j]) || powerUps[i]->burned()) {
+				if (powerUps[i]->collides(*players[j])) {
 					powerUps[i] = powerUps[powerUps.size() - 1];
 					powerUps.pop_back();
 					data->assets.getSound("PowerUp").play();
