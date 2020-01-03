@@ -137,7 +137,7 @@ namespace Game {
 			if (sf::Joystick::isConnected(i) && !playersConnected[i]) {
 				playersConnected[i] = true;
 				if (i >= 2) {
-					players.emplace_back(new Player(data, playerStartPositions[i], i+1));
+					players.emplace_back(new Player(data, playerStartPositions[i], i + 1));
 				}
 			}
 		}
@@ -179,7 +179,7 @@ namespace Game {
 
 		//Bombs
 		for (int i = bombs.size() - 1; i >= 0 ; i--) {
-			bombs[i]->update();
+			bombs[i]->update(powerUps);
 
 			if (bombs[i]->shouldExplode) {
 				bombs[i]->explode(gameField, brickTiles, powerUps, bombs);
@@ -224,6 +224,11 @@ namespace Game {
 			if (brickTiles[i]->burned()) {
 				if (brickTiles[i]->powerUp != PowerUpName::None) {
 					powerUps.emplace_back(new PowerUp(data, brickTiles[i]->powerUp, brickTiles[i]->getPosition()));
+					for (int i = 0; i < bombs.size(); i++) {
+						if (Collision::checkSpriteCollision(powerUps[powerUps.size() - 1]->getSprite(), bombs[i]->getSprite())) {
+							bombs[i]->onTopOfPowerUp = true;
+						}
+					}
 				}
 				brickTiles[i] = brickTiles[brickTiles.size() - 1];
 				brickTiles.pop_back();
@@ -303,6 +308,7 @@ namespace Game {
 							step++;
 						}
 						bombs[i]->move(sf::Vector2i(bombs[i]->normalizedPos.x, bombs[i]->normalizedPos.y - step));
+						bombs[i]->fly = true;
 					} 
 					break;
 				}
@@ -320,6 +326,7 @@ namespace Game {
 							step++;
 						}
 						bombs[i]->move(sf::Vector2i(bombs[i]->normalizedPos.x, bombs[i]->normalizedPos.y + step));
+						bombs[i]->fly = true;
 					}
 					break;
 				}
@@ -337,6 +344,7 @@ namespace Game {
 							step++;
 						}
 						bombs[i]->move(sf::Vector2i(bombs[i]->normalizedPos.x + step, bombs[i]->normalizedPos.y));
+						bombs[i]->fly = true;
 					}
 					break;
 				}
@@ -354,6 +362,7 @@ namespace Game {
 							step++;
 						}
 						bombs[i]->move(sf::Vector2i(bombs[i]->normalizedPos.x - step, bombs[i]->normalizedPos.y));
+						bombs[i]->fly = true;
 					}
 					break;
 				}

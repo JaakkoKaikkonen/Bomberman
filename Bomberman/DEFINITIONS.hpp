@@ -38,6 +38,10 @@ enum class ControllerButton { A, B, X, Y, LB, RB, View, Menu, Left_Stick_Down, R
 #define BOMB_2 sf::IntRect(120, 102, 16, 16)
 #define BOMB_3 sf::IntRect(137, 102, 16, 16)
 
+#define BOMB_NO_GREEN_1 sf::IntRect(137, 51, 16, 16)
+#define BOMB_NO_GREEN_2 sf::IntRect(137, 68, 16, 16)
+#define BOMB_NO_GREEN_3 sf::IntRect(137, 85, 16, 16)
+
 #define EXPLOSION_MIDDLE_1 sf::IntRect(69, 68, 16, 16)
 #define EXPLOSION_MIDDLE_2 sf::IntRect(120, 51, 16, 16)
 #define EXPLOSION_MIDDLE_3 sf::IntRect(103, 51, 16, 16)

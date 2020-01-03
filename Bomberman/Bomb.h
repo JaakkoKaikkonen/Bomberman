@@ -19,7 +19,7 @@ namespace Game {
 
 		Bomb(gameDataRef data, Player& player, sf::Vector2i position, int blastRadius);
 
-		void update();
+		void update(std::vector<PowerUp*>& powerUps);
 
 		void move(sf::Vector2i position);
 
@@ -32,6 +32,8 @@ namespace Game {
 		void draw();
 
 		sf::Vector2f getPosition() { return bomb.getPosition(); }
+
+		sf::Sprite getSprite() { return bomb; }
 
 	public:
 
@@ -49,6 +51,9 @@ namespace Game {
 
 		bool hitByExplosion = false;
 		
+		bool fly = false;
+
+		bool onTopOfPowerUp = false;
 
 	private:
 		gameDataRef data;
@@ -56,8 +61,11 @@ namespace Game {
 		Player& player;
 
 		sf::Sprite bomb;
+
 		sf::IntRect bombAnimationFrames[3] = { BOMB_1, BOMB_2, BOMB_3 };
 		Animation bombAnimation;
+		sf::IntRect bombFlyAnimationFrames[3] = { BOMB_NO_GREEN_1, BOMB_NO_GREEN_2, BOMB_NO_GREEN_3 };
+		Animation bombFlyAnimation;
 
 		sf::Sprite explosionMiddle;
 		sf::IntRect explosionMiddleAnimationFrames[5] = { EXPLOSION_MIDDLE_1, EXPLOSION_MIDDLE_2, EXPLOSION_MIDDLE_3, EXPLOSION_MIDDLE_4, EXPLOSION_MIDDLE_5 };

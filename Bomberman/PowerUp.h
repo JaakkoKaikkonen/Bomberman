@@ -22,12 +22,14 @@ namespace Game {
 
 		void draw();
 
-		sf::Vector2f getPosition() { return powerUpSprite.getPosition(); };
+		sf::Vector2f getPosition() { return powerUpSprite.getPosition(); }
+
+		sf::Sprite getSprite() { return powerUpSprite; }
 
 	private:
 		gameDataRef data;
 
-		sf::Sprite powerUpSprite;
+	    sf::Sprite powerUpSprite;
 
 		PowerUpName powerUp;
 
